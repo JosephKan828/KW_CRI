@@ -93,7 +93,15 @@ git -C "$PROJECT_ROOT" add .
 if git -C "$PROJECT_ROOT" diff --cached --quiet; then
     echo "⚪ No changes detected to commit."
 else
-    git -C "$PROJECT_ROOT" commit -m "docs: Automated dispersion sensitivity sweep ($TIMESTAMP)"
+    echo "🤖 Asking agy to write the commit message..."
+    # Capture the diff, limiting to 1000 lines to avoid massive prompts
+    DIFF=$(git -C "$PROJECT_ROOT" diff --cached | head -n 1000)
+    
+    # Use agy purely as a text generator to write the message
+    COMMIT_MSG=$(agy -p "Write a concise, one-line semantic commit message (e.g. 'docs: update sensitivity logs') for the following diff. Output ONLY the raw message text. Do NOT wrap it in markdown, do NOT include quotes, and do NOT include any conversational filler. Diff: $DIFF")
+    
+    echo "📝 Commit Message: $COMMIT_MSG"
+    git -C "$PROJECT_ROOT" commit -m "$COMMIT_MSG"
     git -C "$PROJECT_ROOT" push
     echo "✅ Changes successfully pushed to GitHub."
 fi

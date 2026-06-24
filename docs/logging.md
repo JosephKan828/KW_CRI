@@ -62,3 +62,19 @@
 - `m2_LIST`: -2.0 -1.0 0.0 1.0 2.0
 ****
 
+
+### Experiment Run: 2026-06-24 16:27:49
+- **Description:** 2nd mode moisture relaxation (m2) sensitivity
+- **Git Commit:** `83a5911`
+- **Swept Parameters:**
+- `m2_LIST`: -2.0 -1.0 0.0 1.0 2.0
+****
+
+
+### Experiment Run: 2026-06-24 16:29:56
+- **Description:** 2nd mode moisture relaxation (m2) sensitivity
+- **Git Commit:** `83a5911`
+- **Swept Parameters:**
+- `m2_LIST`: -2.0 -1.0 0.0 1.0 2.0
+****
+
