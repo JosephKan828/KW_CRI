@@ -150,3 +150,11 @@
 - `m1_LIST`: -1.0 -0.5 0.0 0.5 1.0
 ****
 
+
+### Experiment Run: 2026-06-24 17:05:55
+- **Description:** rad sensitivity
+- **Git Commit:** `408ec2f`
+- **Swept Parameters:**
+- `scaling_factor_LIST`: 0.0 0.1 0.5 1.0 2.0
+****
+
