@@ -38,3 +38,19 @@
 - `m1_LIST`: -1.0 -0.5 0.0 0.5 1.0
 ****
 
+
+### Experiment Run: 2026-06-24 16:15:27
+- **Description:** 1st q adv. sensitivity
+- **Git Commit:** `1ebdea7`
+- **Swept Parameters:**
+- `m1_LIST`: -1.0 -0.5 0.0 0.5 1.0
+****
+
+
+### Experiment Run: 2026-06-24 16:19:07
+- **Description:** 1st mode PBL adjustment (b1) sensitivity
+- **Git Commit:** `1ebdea7`
+- **Swept Parameters:**
+- `b1_LIST`: 0.0 1.0 2.0 3.0 4.0
+****
+

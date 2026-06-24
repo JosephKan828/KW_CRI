@@ -13,11 +13,11 @@ EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 
 # F_LIST="3.0 4.0 5.0"
 # f_LIST="0.0 0.25 0.5 0.75 1.0"
-m1_LIST="-1.0 -0.5 0.0 0.5 1.0"
+# m1_LIST="-1.0 -0.5 0.0 0.5 1.0"
 # c1_LIST="0.8 1.0 1.2"
 # c2_LIST="0.4 0.5 0.6"
 # scaling_factor_LIST="0.05 0.1 0.2"
-# b1_LIST="0.8 1.0 1.2"
+b1_LIST="0.0 1.0 2.0 3.0 4.0"
 # m2_LIST="0.8 1.0 1.2"
 # gamma_q_LIST="0.5 0.7 0.9"
 
@@ -85,11 +85,15 @@ echo "Sweep and visualization finished successfully. Setup logged to $LOG_FILE."
 # SYNC WITH GITHUB
 # ====================================================================
 echo "Automatically committing and pushing changes to GitHub..."
-git add .
-if git diff --cached --quiet; then
+
+# Add all changes across the entire project (not just the Code/ directory)
+PROJECT_ROOT="/home/b11209013/KW_CRI"
+git -C "$PROJECT_ROOT" add .
+
+if git -C "$PROJECT_ROOT" diff --cached --quiet; then
     echo "⚪ No changes detected to commit."
 else
-    git commit -m "docs: Automated dispersion sensitivity sweep ($TIMESTAMP)"
-    git push
+    git -C "$PROJECT_ROOT" commit -m "docs: Automated dispersion sensitivity sweep ($TIMESTAMP)"
+    git -C "$PROJECT_ROOT" push
     echo "✅ Changes successfully pushed to GitHub."
 fi
