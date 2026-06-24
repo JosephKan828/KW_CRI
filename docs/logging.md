@@ -102,3 +102,11 @@
 - `f_LIST`: 0.0 0.25 0.5 0.75 1.0
 ****
 
+
+### Experiment Run: 2026-06-24 16:45:09
+- **Description:** scaling factor sensitivity
+- **Git Commit:** `3d31033`
+- **Swept Parameters:**
+- `scaling_factor_LIST`: 0.0 0.1 0.5 1.0 2.0
+****
+
