@@ -118,3 +118,11 @@
 - `scaling_factor_LIST`: 0.0 0.1 0.5 1.0 2.0
 ****
 
+
+### Experiment Run: 2026-06-24 16:47:12
+- **Description:** m2 sensitivity
+- **Git Commit:** `caa7d71`
+- **Swept Parameters:**
+- `scaling_factor_LIST`: 0.0 0.1 0.5 1.0 2.0
+****
+
