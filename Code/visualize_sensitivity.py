@@ -23,7 +23,7 @@ def plot_heatmaps(data_array: np.ndarray, labels: list, x_ticks: np.ndarray,
     plt.rcParams.update({"font.family": "serif"})
     fig, ax = plt.subplots(1, 3, figsize=(16, 3), sharey="col")
     
-    mode_titles = ["Moisture Mode", "Convectively Coupled Waves", "Fast Gravity Wave"]
+    mode_titles = ["Slow Mode", "Intermediate Mode", "Fast Wave"]
     
     for i in range(3):
         # We handle center differently if provided

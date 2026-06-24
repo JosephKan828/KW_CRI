@@ -57,3 +57,51 @@ The classification is made by phase speed at default setting ($f=0.5$).
 # Change $f$ -- Phase Speed
 
 ![width:80%](../Figure/f_sensitivity/phase_speed.png)
+
+---
+
+# Change $b_1$ -- Instability
+
+![width:80%](../Figure/b1_sensitivity/instability.png)
+
+---
+
+# Change $b_1$ -- Phase Speed
+
+![width:80%](../Figure/b1_sensitivity/phase_speed.png)
+
+---
+
+# Change $\gamma_q$ -- Instability
+
+![width:80%](../Figure/gamma_q_sensitivity/instability.png)
+
+---
+
+# Change $\gamma_q$ -- Phase Speed
+
+![width:80%](../Figure/gamma_q_sensitivity/phase_speed.png)
+
+---
+
+# Change $m_1$ -- Instability
+
+![width:80%](../Figure/m1_sensitivity/instability.png)
+
+---
+
+# Change $m_1$ -- Phase Speed
+
+![width:80%](../Figure/m1_sensitivity/phase_speed.png)
+
+---
+
+# Change $m_2$ -- Instability
+
+![width:80%](../Figure/m2_sensitivity/instability.png)
+
+---
+
+# Change $m_2$ -- Phase Speed
+
+![width:80%](../Figure/m2_sensitivity/phase_speed.png)
