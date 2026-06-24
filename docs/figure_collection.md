@@ -105,3 +105,15 @@ The classification is made by phase speed at default setting ($f=0.5$).
 # Change $m_2$ -- Phase Speed
 
 ![width:80%](../Figure/m2_sensitivity/phase_speed.png)
+
+---
+
+# Change radiative heating instensity -- Instability
+
+![width:80%](../Figure/scaling_factor_sensitivity/instability.png)
+
+---
+
+# Change radiative heating instensity -- Phase Speed
+
+![width:80%](../Figure/scaling_factor_sensitivity/phase_speed.png)
