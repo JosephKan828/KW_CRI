@@ -142,3 +142,11 @@
 - `f_LIST`: 0.0 0.25 0.5 0.75 1.0
 ****
 
+
+### Experiment Run: 2026-06-24 17:05:23
+- **Description:** m1 sensitivity
+- **Git Commit:** `148167e`
+- **Swept Parameters:**
+- `m1_LIST`: -1.0 -0.5 0.0 0.5 1.0
+****
+
