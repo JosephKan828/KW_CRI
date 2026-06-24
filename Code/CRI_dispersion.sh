@@ -18,8 +18,8 @@ EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 # c2_LIST="0.4 0.5 0.6"
 # scaling_factor_LIST="0.05 0.1 0.2"
 # b1_LIST="0.0 1.0 2.0 3.0 4.0"
-m2_LIST="-2.0 -1.0 0.0 1.0 2.0"
-# gamma_q_LIST="0.5 0.7 0.9"
+# m2_LIST="-2.0 -1.0 0.0 1.0 2.0"
+gamma_q_LIST="0.0 0.25 0.5 0.7 1.0"
 
 # ====================================================================
 # LOGGING SETUP
@@ -98,7 +98,7 @@ else
     DIFF=$(git -C "$PROJECT_ROOT" diff --cached | head -n 1000)
     
     # Use agy purely as a text generator to write the message
-    COMMIT_MSG=$(agy -p "Write a concise, one-line semantic commit message (e.g. 'docs: update sensitivity logs') for the following diff. Output ONLY the raw message text. Do NOT wrap it in markdown, do NOT include quotes, and do NOT include any conversational filler. Diff: $DIFF")
+    COMMIT_MSG=$(agy -p "Write a semantic commit message (e.g. 'docs: update sensitivity logs') for the following diff. Output ONLY the raw message text. Do NOT wrap it in markdown, do NOT include quotes, and do NOT include any conversational filler. Diff: $DIFF")
     
     echo "📝 Commit Message: $COMMIT_MSG"
     git -C "$PROJECT_ROOT" commit -m "$COMMIT_MSG"
