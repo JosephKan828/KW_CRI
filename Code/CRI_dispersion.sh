@@ -12,8 +12,8 @@ EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 # ====================================================================
 
 # F_LIST="3.0 4.0 5.0"
-f_LIST="0.0 0.25 0.5 0.75 1.0"
-# m1_LIST="0.1 0.3 0.5"
+# f_LIST="0.0 0.25 0.5 0.75 1.0"
+m1_LIST="-1.0 -0.5 0.0 0.5 1.0"
 # c1_LIST="0.8 1.0 1.2"
 # c2_LIST="0.4 0.5 0.6"
 # scaling_factor_LIST="0.05 0.1 0.2"
@@ -66,4 +66,30 @@ python3 CRI_dispersion.py \
     ${m2_LIST:+--m2 $m2_LIST} \
     ${gamma_q_LIST:+--gamma_q $gamma_q_LIST}
 
-echo "Sweep finished successfully. Setup logged to $LOG_FILE."
+echo "Generating heatmaps..."
+
+python3 visualize_sensitivity.py \
+    ${F_LIST:+--F $F_LIST} \
+    ${f_LIST:+--f $f_LIST} \
+    ${m1_LIST:+--m1 $m1_LIST} \
+    ${c1_LIST:+--c1 $c1_LIST} \
+    ${c2_LIST:+--c2 $c2_LIST} \
+    ${scaling_factor_LIST:+--scaling_factor $scaling_factor_LIST} \
+    ${b1_LIST:+--b1 $b1_LIST} \
+    ${m2_LIST:+--m2 $m2_LIST} \
+    ${gamma_q_LIST:+--gamma_q $gamma_q_LIST}
+
+echo "Sweep and visualization finished successfully. Setup logged to $LOG_FILE."
+
+# ====================================================================
+# SYNC WITH GITHUB
+# ====================================================================
+echo "Automatically committing and pushing changes to GitHub..."
+git add .
+if git diff --cached --quiet; then
+    echo "⚪ No changes detected to commit."
+else
+    git commit -m "docs: Automated dispersion sensitivity sweep ($TIMESTAMP)"
+    git push
+    echo "✅ Changes successfully pushed to GitHub."
+fi
