@@ -106,7 +106,7 @@ def main():
     # Calculate Phase Speed
     pspeed_array = np.array([(value.real / k_cal[:, None]) * 50 for value in disp_roots.values()])
     
-    labels = list(disp_roots.keys())
+    labels = list([key.split("=")[-1] for key in disp_roots.keys()])
     x_ticks = k_dis[demo_kidx]
     
     # Slice the arrays to only include the target grid points
