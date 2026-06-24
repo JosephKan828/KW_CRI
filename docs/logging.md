@@ -126,3 +126,11 @@
 - `scaling_factor_LIST`: 0.0 0.1 0.5 1.0 2.0
 ****
 
+
+### Experiment Run: 2026-06-24 16:47:45
+- **Description:** gamma q sensitivity
+- **Git Commit:** `d18ff92`
+- **Swept Parameters:**
+- `gamma_q_LIST`: 0.0 0.25 0.5 0.7 1.0
+****
+
