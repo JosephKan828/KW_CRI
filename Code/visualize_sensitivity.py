@@ -16,36 +16,64 @@ def load_data(data_dir: Path) -> Dict[str, np.ndarray]:
         
     return disp_roots
 
-def plot_heatmaps(data_array: np.ndarray, labels: list, x_ticks: np.ndarray, 
-                  title: str, ylabel: str, vmin: float, vmax: float, 
-                  center: float, output_path: Path):
-    """Generate and save a 3-panel heatmap for the given metrics."""
+def plot_combined_heatmaps(instab_grid: np.ndarray, pspeed_grid: np.ndarray, 
+                           labels: list, x_ticks: np.ndarray, title: str, 
+                           ylabel: str, output_path: Path):
+    """Generate and save a (2, 3) heatmap for instability and phase speed."""
     plt.rcParams.update({"font.family": "serif"})
-    fig, ax = plt.subplots(1, 3, figsize=(16, 3), sharey="col")
+    fig, ax = plt.subplots(2, 3, figsize=(16, 7))
     
     mode_titles = ["Slow Mode", "Intermediate Mode", "Fast Wave"]
     
     for i in range(3):
-        # We handle center differently if provided
-        cmap_kwargs = {"vmin": vmin, "vmax": vmax}
-        if center is not None:
-            cmap_kwargs["center"] = center
-            
+        # --- Top Row: Instability ---
         sns.heatmap(
-            data_array[..., i],
-            ax=ax[i],
+            instab_grid[..., i],
+            ax=ax[0, i],
             annot=True,
             fmt=".2f", 
             cmap="coolwarm",
-            xticklabels=np.round(x_ticks, 1).astype(int),
-            yticklabels=labels,
-            **cmap_kwargs
+            vmin=-2.0, vmax=2.0,
+            cbar=(i == 2), # Colorbar only on the most right panel
+            xticklabels=False, # X-ticks only on the lower row
+            yticklabels=labels if i == 0 else False
         )
-        ax[i].set_title(mode_titles[i], fontsize=14, fontweight="bold")
+        
+        # Title of slow, intermediate, and fast only on the top row
+        ax[0, i].set_title(mode_titles[i], fontsize=14, fontweight="bold")
+        
         if i == 0:
-            ax[i].set_ylabel(ylabel, fontsize=12)
+            ax[0, i].set_ylabel(f"Instability\n\n{ylabel}", fontsize=12)
+            
+        # Optional colorbar label
+        if i == 2:
+            cbar = ax[0, i].collections[0].colorbar
+            cbar.set_label("Instability", fontsize=12)
 
-    fig.suptitle(title, x=0.5, y=1.1, fontsize=16, fontweight="bold")
+        # --- Bottom Row: Phase Speed ---
+        sns.heatmap(
+            pspeed_grid[..., i],
+            ax=ax[1, i],
+            annot=True,
+            fmt=".2f", 
+            cmap="coolwarm",
+            vmin=-15.0, vmax=45.0, center=0.0,
+            cbar=(i == 2), # Colorbar only on the most right panel
+            xticklabels=np.round(x_ticks, 1).astype(int), # X-ticks on lower row
+            yticklabels=labels if i == 0 else False
+        )
+        
+        if i == 0:
+            ax[1, i].set_ylabel(f"Phase Speed\n\n{ylabel}", fontsize=12)
+            
+        if i == 2:
+            cbar = ax[1, i].collections[0].colorbar
+            cbar.set_label("Phase Speed", fontsize=12)
+
+    fig.suptitle(title, x=0.5, y=1.02, fontsize=16, fontweight="bold")
+    
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
     
     # Ensure the output directory exists
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -113,29 +141,18 @@ def main():
     instab_grid = instab_array[:, demo_kidx, :]
     pspeed_grid = pspeed_array[:, demo_kidx, :]
     
-    print("Generating Linear Instability heatmap...")
-    plot_heatmaps(
-        data_array=instab_grid,
+    print("Generating Combined Heatmap...")
+    plot_combined_heatmaps(
+        instab_grid=instab_grid,
+        pspeed_grid=pspeed_grid,
         labels=labels,
         x_ticks=x_ticks,
-        title="Linear Instability",
+        title="Dispersion Relation Sensitivity",
         ylabel="Parameters",
-        vmin=-2.0, vmax=2.0, center=None,
-        output_path=fig_dir / "instability.png"
+        output_path=fig_dir / "sensitivity.png"
     )
     
-    print("Generating Phase Speed heatmap...")
-    plot_heatmaps(
-        data_array=pspeed_grid,
-        labels=labels,
-        x_ticks=x_ticks,
-        title="Phase Speed",
-        ylabel="Parameters",
-        vmin=-15.0, vmax=45.0, center=0.0,
-        output_path=fig_dir / "phase_speed.png"
-    )
-    
-    print(f"Done! Figures saved to {fig_dir}")
+    print(f"Done! Figure saved to {fig_dir}/combined_sensitivity.png")
 
 if __name__ == "__main__":
     main()
