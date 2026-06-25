@@ -36,14 +36,14 @@ def plot_combined_heatmaps(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
             vmin=-2.0, vmax=2.0,
             cbar=(i == 2), # Colorbar only on the most right panel
             xticklabels=False, # X-ticks only on the lower row
-            # yticklabels=labels if i == 0 else False
+            yticklabels=labels if i == 0 else False
         )
         
         # Title of slow, intermediate, and fast only on the top row
         ax[0, i].set_title(mode_titles[i], fontsize=14, fontweight="bold")
         
         if i == 0:
-            ax[0, i].set_ylabel(f"Instability\n\n{ylabel}", fontsize=14, fontweight="bold")
+            ax[0, i].set_ylabel(f"Instability", fontsize=14, fontweight="bold")
             
         # Optional colorbar label
         if i == 2:
@@ -60,11 +60,11 @@ def plot_combined_heatmaps(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
             vmin=-15.0, vmax=45.0, center=0.0,
             cbar=(i == 2), # Colorbar only on the most right panel
             xticklabels=np.round(x_ticks, 1).astype(int), # X-ticks on lower row
-            # yticklabels=labels if i == 0 else False
+            yticklabels=labels if i == 0 else False
         )
         
         if i == 0:
-            ax[1, i].set_ylabel(f"Phase Speed\n\n{ylabel}", fontsize=14, fontweight="bold")
+            ax[1, i].set_ylabel(f"Phase Speed", fontsize=14, fontweight="bold")
             
         if i == 2:
             cbar = ax[1, i].collections[0].colorbar
