@@ -342,3 +342,11 @@
 - `m2_LIST`: -2.0 -1.0 0.0 1.0 2.0
 ****
 
+
+### Experiment Run: 2026-06-25 11:48:09
+- **Description:** gamma q sensitivity
+- **Git Commit:** `80212ea`
+- **Swept Parameters:**
+- `gamma_q_LIST`: 0.0 0.25 0.5 0.7 1.0
+****
+
