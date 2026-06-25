@@ -48,72 +48,34 @@ There are three types of disturbances in this system, moisture mode, convectivel
 
 # Change $f$ -- Instability
 
-![width:80%](../Figure/f_sensitivity/instability.png)
-
-The classification is made by phase speed at default setting ($f=0.5$).
-
----
-
-# Change $f$ -- Phase Speed
-
-![width:80%](../Figure/f_sensitivity/phase_speed.png)
+![width:80%](../Figure/f_sensitivity/sensitivity.png)
 
 ---
 
 # Change $b_1$ -- Instability
 
-![width:80%](../Figure/b1_sensitivity/instability.png)
-
----
-
-# Change $b_1$ -- Phase Speed
-
-![width:80%](../Figure/b1_sensitivity/phase_speed.png)
+![width:80%](../Figure/b1_sensitivity/sensitivity.png)
 
 ---
 
 # Change $\gamma_q$ -- Instability
 
-![width:80%](../Figure/gamma_q_sensitivity/instability.png)
-
----
-
-# Change $\gamma_q$ -- Phase Speed
-
-![width:80%](../Figure/gamma_q_sensitivity/phase_speed.png)
+![width:80%](../Figure/gamma_q_sensitivity/sensitivity.png)
 
 ---
 
 # Change $m_1$ -- Instability
 
-![width:80%](../Figure/m1_sensitivity/instability.png)
-
----
-
-# Change $m_1$ -- Phase Speed
-
-![width:80%](../Figure/m1_sensitivity/phase_speed.png)
+![width:80%](../Figure/m1_sensitivity/sensitivity.png)
 
 ---
 
 # Change $m_2$ -- Instability
 
-![width:80%](../Figure/m2_sensitivity/instability.png)
+![width:80%](../Figure/m2_sensitivity/sensitivity.png)
 
 ---
 
-# Change $m_2$ -- Phase Speed
+# Change Radiative Heating Rate -- Instability
 
-![width:80%](../Figure/m2_sensitivity/phase_speed.png)
-
----
-
-# Change radiative heating instensity -- Instability
-
-![width:80%](../Figure/scaling_factor_sensitivity/instability.png)
-
----
-
-# Change radiative heating instensity -- Phase Speed
-
-![width:80%](../Figure/scaling_factor_sensitivity/phase_speed.png)
+![width:80%](../Figure/scaling_factor_sensitivity/sensitivity.png)
