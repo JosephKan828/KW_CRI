@@ -100,7 +100,7 @@ else
     DIFF=$(git -C "$PROJECT_ROOT" diff --cached | head -n 1000)
     
     # Use agy purely as a text generator to write the message
-    COMMIT_MSG=$(agy -p "Write a semantic commit message (e.g. 'docs: update sensitivity logs') for the following diff. Output ONLY the raw message text. Do NOT wrap it in markdown, do NOT include quotes, and do NOT include any conversational filler. Diff: $DIFF")
+    COMMIT_MSG=$(agy -p "Write a semantic commit message for the following diff. Output ONLY the raw message text. Do NOT wrap it in markdown, do NOT include quotes, and do NOT include any conversational filler. Diff: $DIFF")
     
     echo "📝 Commit Message: $COMMIT_MSG"
     git -C "$PROJECT_ROOT" commit -m "$COMMIT_MSG"

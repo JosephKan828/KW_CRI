@@ -214,3 +214,19 @@
 - `f_LIST`: 0.0 0.25 0.5 0.75 1.0
 ****
 
+
+### Experiment Run: 2026-06-25 11:02:45
+- **Description:** f sensitivity
+- **Git Commit:** `1404bff`
+- **Swept Parameters:**
+- `f_LIST`: 0.0 0.25 0.5 0.75 1.0
+****
+
+
+### Experiment Run: 2026-06-25 11:04:10
+- **Description:** f sensitivity
+- **Git Commit:** `1404bff`
+- **Swept Parameters:**
+- `f_LIST`: 0.0 0.25 0.5 0.75 1.0
+****
+
