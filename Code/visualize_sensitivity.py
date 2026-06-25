@@ -134,8 +134,8 @@ def main():
     # Calculate Phase Speed
     pspeed_array = np.array([(value.real / k_cal[:, None]) * 50 for value in disp_roots.values()])
     
-    labels = list([float(key.split("=")[-1]) for key in disp_roots.keys()])
-    labels_argsort = np.argsort(np.array(labels))
+    labels = np.array([float(key.split("=")[-1]) for key in disp_roots.keys()])
+    labels_argsort = np.argsort(labels)
 
     x_ticks = k_dis[demo_kidx]
     
