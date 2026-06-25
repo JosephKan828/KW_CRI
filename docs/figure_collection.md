@@ -46,36 +46,36 @@ There are three types of disturbances in this system, moisture mode, convectivel
 
 ---
 
-# Change $f$ -- Instability
+# Change $f$
 
 ![width:80%](../Figure/f_sensitivity/sensitivity.png)
 
 ---
 
-# Change $b_1$ -- Instability
+# Change $b_1$
 
 ![width:80%](../Figure/b1_sensitivity/sensitivity.png)
 
 ---
 
-# Change $\gamma_q$ -- Instability
+# Change $\gamma_q$
 
 ![width:80%](../Figure/gamma_q_sensitivity/sensitivity.png)
 
 ---
 
-# Change $m_1$ -- Instability
+# Change $m_1$
 
 ![width:80%](../Figure/m1_sensitivity/sensitivity.png)
 
 ---
 
-# Change $m_2$ -- Instability
+# Change $m_2$
 
 ![width:80%](../Figure/m2_sensitivity/sensitivity.png)
 
 ---
 
-# Change Radiative Heating Rate -- Instability
+# Change Radiative Heating Rate
 
 ![width:80%](../Figure/scaling_factor_sensitivity/sensitivity.png)

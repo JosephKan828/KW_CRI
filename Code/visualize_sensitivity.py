@@ -134,7 +134,9 @@ def main():
     # Calculate Phase Speed
     pspeed_array = np.array([(value.real / k_cal[:, None]) * 50 for value in disp_roots.values()])
     
-    labels = list([key.split("=")[-1] for key in disp_roots.keys()])
+    labels = list([key.split("=")[-1].astype(float) for key in disp_roots.keys()])
+    labels_argsort = np.argsort(np.array(labels))
+
     x_ticks = k_dis[demo_kidx]
     
     # Slice the arrays to only include the target grid points
@@ -143,9 +145,9 @@ def main():
     
     print("Generating Combined Heatmap...")
     plot_combined_heatmaps(
-        instab_grid=instab_grid,
-        pspeed_grid=pspeed_grid,
-        labels=labels,
+        instab_grid=instab_grid[labels_argsort],
+        pspeed_grid=pspeed_grid[labels_argsort],
+        labels=labels[labels_argsort],
         x_ticks=x_ticks,
         title="Dispersion Relation Sensitivity",
         ylabel="Parameters",
