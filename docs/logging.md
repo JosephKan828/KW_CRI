@@ -182,3 +182,35 @@
 - `gamma_q_LIST`: 0.0 0.25 0.5 0.7 1.0
 ****
 
+
+### Experiment Run: 2026-06-25 10:57:13
+- **Description:** f sensitivity
+- **Git Commit:** `f1da4d7`
+- **Swept Parameters:**
+- `f_LIST`: 0.0 0.25 0.5 0.75 1.0
+****
+
+
+### Experiment Run: 2026-06-25 10:57:42
+- **Description:** f sensitivity
+- **Git Commit:** `f1da4d7`
+- **Swept Parameters:**
+- `f_LIST`: 0.0 0.25 0.5 0.75 1.0
+****
+
+
+### Experiment Run: 2026-06-25 10:59:13
+- **Description:** f sensitivity
+- **Git Commit:** `f1da4d7`
+- **Swept Parameters:**
+- `f_LIST`: 0.0 0.25 0.5 0.75 1.0
+****
+
+
+### Experiment Run: 2026-06-25 11:00:26
+- **Description:** f sensitivity
+- **Git Commit:** `f1da4d7`
+- **Swept Parameters:**
+- `f_LIST`: 0.0 0.25 0.5 0.75 1.0
+****
+
