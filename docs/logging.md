@@ -262,3 +262,11 @@
 - `b1_LIST`: 0.0 1.0 2.0 3.0 4.0
 ****
 
+
+### Experiment Run: 2026-06-25 11:08:37
+- **Description:** m2 sensitivity
+- **Git Commit:** `e8ecad4`
+- **Swept Parameters:**
+- `m2_LIST`: -2.0 -1.0 0.0 1.0 2.0
+****
+
