@@ -326,3 +326,11 @@
 - `scaling_factor_LIST`: 0.0 0.1 0.5 1.0 2.0
 ****
 
+
+### Experiment Run: 2026-06-25 11:46:24
+- **Description:** b1 sensitivity
+- **Git Commit:** `46736db`
+- **Swept Parameters:**
+- `b1_LIST`: 0.0 1.0 2.0 3.0 4.0
+****
+
