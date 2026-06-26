@@ -26,8 +26,8 @@ EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 
 # Dense grid configurations (~100 samples) across the same boundaries:
 # F_LIST=$(seq -f "%.3f" -s " " 3.0 0.02 5.0)
-f_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
-# m1_LIST=$(seq -f "%.3f" -s " " -1.0 0.1 1.0)
+# f_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
+m1_LIST=$(seq -f "%.3f" -s " " -1.0 0.1 1.0)
 # c1_LIST=$(seq -f "%.3f" -s " " 0.8 0.02 1.2)
 # c2_LIST=$(seq -f "%.3f" -s " " 0.4 0.01 0.6)
 # scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
@@ -123,7 +123,7 @@ else
     echo "🤖 Asking agy to write the commit message..."
     # Capture the diff, limiting to 500 lines and excluding data/binary/notebook files to avoid massive prompts & argument limit errors
     DIFF=$(git -C "$PROJECT_ROOT" diff --cached -- . ':(exclude)*.npy' ':(exclude)*.png' ':(exclude)*.ipynb' | head -n 500)
-    echo $DIFF
+    
     # Use agy purely as a text generator to write the message
     COMMIT_MSG=$(agy -p "Write a semantic commit message for the following diff. Output ONLY the raw message text. Do NOT wrap it in markdown, do NOT include quotes, and do NOT include any conversational filler. Diff: $DIFF")
     
