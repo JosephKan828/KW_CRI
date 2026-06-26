@@ -20,8 +20,8 @@ EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 # c2_LIST="0.4 0.5 0.6"
 # scaling_factor_LIST="0.0 0.1 0.5 1.0 2.0"
 # b1_LIST="0.0 1.0 2.0 3.0 4.0"
-m2_LIST="-2.0 -1.0 0.0 1.0 2.0"
-# gamma_q_LIST="0.0 0.25 0.5 0.7 1.0"
+# m2_LIST="-2.0 -1.0 0.0 1.0 2.0"
+gamma_q_LIST="0.0 0.25 0.5 0.7 1.0"
 
 # ====================================================================
 # LOGGING SETUP
