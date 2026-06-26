@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 import itertools
+import multiprocessing
 import numpy as np
 
 from pathlib import Path
@@ -78,6 +79,13 @@ def run_experiment(param_dict, output_fig_dir, output_data_dir):
     plt.close(fig)
     print(f"Finished processing for {modification}")
 
+def run_single_experiment_wrapper(args):
+    exp_dict, fig_dir, data_dir = args
+    try:
+        run_experiment(exp_dict, fig_dir, data_dir)
+    except Exception as e:
+        print(f"Experiment {exp_dict} failed with exception: {e}")
+
 def main():
     parser = argparse.ArgumentParser(description="Systematically test sensitivity of dispersion relation over multiple parameters.")
     
@@ -124,12 +132,11 @@ def main():
     os.makedirs(data_dir, exist_ok=True)
     
 
-    # Execute sequentially
-    for exp in experiments:
-        try:
-            run_experiment(exp, fig_dir, data_dir)
-        except Exception as e:
-            print(f"Experiment failed with exception: {e}")
+    # Execute in parallel
+    print(f"Starting parallel execution using {multiprocessing.cpu_count()} cores...")
+    args_list = [(exp, fig_dir, data_dir) for exp in experiments]
+    with multiprocessing.Pool(8) as pool:
+        pool.map(run_single_experiment_wrapper, args_list)
             
     print("All sensitivity experiments completed.")
 

@@ -16,59 +16,56 @@ def load_data(data_dir: Path) -> Dict[str, np.ndarray]:
         
     return disp_roots
 
-def plot_combined_heatmaps(instab_grid: np.ndarray, pspeed_grid: np.ndarray, 
-                           labels: list, x_ticks: np.ndarray, title: str, 
+def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray, 
+                           labels: np.ndarray, k_dis: np.ndarray, title: str, 
                            ylabel: str, output_path: Path):
-    """Generate and save a (2, 3) heatmap for instability and phase speed."""
+    """Generate and save a (2, 3) contour plot for instability and phase speed."""
     plt.rcParams.update({"font.family": "serif"})
     fig, ax = plt.subplots(2, 3, figsize=(16, 7))
     
     mode_titles = ["Slow Mode", "Intermediate Mode", "Fast Wave"]
     
+    X, Y = np.meshgrid(k_dis, labels)
+    
     for i in range(3):
         # --- Top Row: Instability ---
-        sns.heatmap(
-            instab_grid[..., i],
-            ax=ax[0, i],
-            annot=True,
-            fmt=".2f", 
+        levels_instab = np.linspace(-2.0, 2.0, 21)
+        cf_instab = ax[0, i].contourf(
+            X, Y, instab_grid[..., i],
+            levels=levels_instab,
             cmap="coolwarm",
-            vmin=-2.0, vmax=2.0,
-            cbar=(i == 2), # Colorbar only on the most right panel
-            xticklabels=False, # X-ticks only on the lower row
-            yticklabels=labels if i == 0 else False
+            extend="both"
         )
         
-        # Title of slow, intermediate, and fast only on the top row
         ax[0, i].set_title(mode_titles[i], fontsize=14, fontweight="bold")
         
         if i == 0:
-            ax[0, i].set_ylabel(f"Instability", fontsize=14, fontweight="bold")
+            ax[0, i].set_ylabel(f"Instability\n{ylabel}", fontsize=14, fontweight="bold")
+        else:
+            ax[0, i].set_yticks([])
             
         # Optional colorbar label
         if i == 2:
-            cbar = ax[0, i].collections[0].colorbar
-            # cbar.set_label("Instability", fontsize=12)
+            cbar = fig.colorbar(cf_instab, ax=ax[0, i])
 
         # --- Bottom Row: Phase Speed ---
-        sns.heatmap(
-            pspeed_grid[..., i],
-            ax=ax[1, i],
-            annot=True,
-            fmt=".2f", 
+        levels_pspeed = np.linspace(-15.0, 45.0, 31)
+        cf_pspeed = ax[1, i].contourf(
+            X, Y, pspeed_grid[..., i],
+            levels=levels_pspeed,
             cmap="coolwarm",
-            vmin=-15.0, vmax=45.0, center=0.0,
-            cbar=(i == 2), # Colorbar only on the most right panel
-            xticklabels=np.round(x_ticks, 1).astype(int), # X-ticks on lower row
-            yticklabels=labels if i == 0 else False
+            extend="both"
         )
         
+        ax[1, i].set_xlabel("Wavenumber ($k$)", fontsize=14)
+        
         if i == 0:
-            ax[1, i].set_ylabel(f"Phase Speed", fontsize=14, fontweight="bold")
+            ax[1, i].set_ylabel(f"Phase Speed\n{ylabel}", fontsize=14, fontweight="bold")
+        else:
+            ax[1, i].set_yticks([])
             
         if i == 2:
-            cbar = ax[1, i].collections[0].colorbar
-            # cbar.set_label("Phase Speed", fontsize=12)
+            cbar = fig.colorbar(cf_pspeed, ax=ax[1, i])
 
     fig.suptitle(title, x=0.5, y=1.02, fontsize=16, fontweight="bold")
     
@@ -117,44 +114,21 @@ def main():
     if not disp_roots:
         print(f"No .npy files found in {data_dir}. Did you run CRI_dispersion.py first? Exiting.")
         return
-
-    # Filter to previous assigned values for the sparse grid setup
-    previous_values = {
-        "F": [3.0, 4.0, 5.0],
-        "f": [0.0, 0.25, 0.5, 0.75, 1.0],
-        "m1": [-1.0, -0.5, 0.0, 0.5, 1.0],
-        "c1": [0.8, 1.0, 1.2],
-        "c2": [0.4, 0.5, 0.6],
-        "scaling_factor": [0.0, 0.1, 0.5, 1.0, 2.0],
-        "b1": [0.0, 1.0, 2.0, 3.0, 4.0],
-        "m2": [-2.0, -1.0, 0.0, 1.0, 2.0],
-        "gamma_q": [0.0, 0.25, 0.5, 0.7, 1.0]
-    }
-    
-    if len(keys) == 1:
-        param_name = keys[0]
-        if param_name in previous_values:
-            valid_vals = set(previous_values[param_name])
-            filtered_disp_roots = {}
-            for k, v in disp_roots.items():
-                try:
-                    val_float = float(k.split("=")[-1])
-                    if any(np.isclose(val_float, expected_val, atol=1e-5) for expected_val in valid_vals):
-                        filtered_disp_roots[k] = v
-                except ValueError:
-                    pass
-            if filtered_disp_roots:
-                disp_roots = filtered_disp_roots
         
-    print(f"Loaded {len(disp_roots)} parameter cases for heatmap: {list(disp_roots.keys())}")
+    print(f"Loaded {len(disp_roots)} parameter cases: {list(disp_roots.keys())}")
     
     # Setup wavenumbers
     k_dis = np.linspace(0, 1e2, 10001)[100:]
     k_cal = 2 * np.pi * 4320 / 40000 * k_dis
     
-    # Identify the target indices for the visualization grids
-    target_k_vals = [1, 5, 10, 15, 20, 25, 30]
-    demo_kidx = np.array([np.argmin(np.abs(k_dis - target_k)) for target_k in target_k_vals])
+    if len(disp_roots) < 2:
+        print(f"Need at least 2 parameter values for a contour plot, but only found {len(disp_roots)}. Exiting.")
+        return
+
+    # Filter wavenumbers for the visualization (up to k=30)
+    target_k_max = 30
+    k_mask = k_dis <= target_k_max
+    k_plot = k_dis[k_mask]
     
     # Calculate Instability
     instab_array = np.array([-1 * value.imag for value in disp_roots.values()])
@@ -164,25 +138,23 @@ def main():
     
     labels = np.array([float(key.split("=")[-1]) for key in disp_roots.keys()])
     labels_argsort = np.argsort(labels)
-
-    x_ticks = k_dis[demo_kidx]
     
     # Slice the arrays to only include the target grid points
-    instab_grid = instab_array[:, demo_kidx, :]
-    pspeed_grid = pspeed_array[:, demo_kidx, :]
+    instab_grid = instab_array[:, k_mask, :]
+    pspeed_grid = pspeed_array[:, k_mask, :]
     
-    print("Generating Combined Heatmap...")
-    plot_combined_heatmaps(
+    print("Generating Combined Contour Plot...")
+    plot_combined_contours(
         instab_grid=instab_grid[labels_argsort],
         pspeed_grid=pspeed_grid[labels_argsort],
         labels=labels[labels_argsort],
-        x_ticks=x_ticks,
+        k_dis=k_plot,
         title="Dispersion Relation Sensitivity",
         ylabel="Parameters",
-        output_path=fig_dir / "sensitivity_heatmap.png"
+        output_path=fig_dir / "sensitivity.png"
     )
     
-    print(f"Done! Figure saved to {fig_dir}/sensitivity_heatmap.png")
+    print(f"Done! Figure saved to {fig_dir}/sensitivity.png")
 
 if __name__ == "__main__":
     main()

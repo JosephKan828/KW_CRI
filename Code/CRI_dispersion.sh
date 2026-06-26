@@ -13,6 +13,7 @@ EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 # Parameter setup
 # ====================================================================
 
+# Original configurations:
 # F_LIST="3.0 4.0 5.0"
 # f_LIST="0.0 0.25 0.5 0.75 1.0"
 # m1_LIST="-1.0 -0.5 0.0 0.5 1.0"
@@ -21,7 +22,18 @@ EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 # scaling_factor_LIST="0.0 0.1 0.5 1.0 2.0"
 # b1_LIST="0.0 1.0 2.0 3.0 4.0"
 # m2_LIST="-2.0 -1.0 0.0 1.0 2.0"
-gamma_q_LIST="0.0 0.25 0.5 0.7 1.0"
+# gamma_q_LIST="0.0 0.25 0.5 0.7 1.0"
+
+# Dense grid configurations (~100 samples) across the same boundaries:
+# F_LIST=$(seq -f "%.3f" -s " " 3.0 0.02 5.0)
+f_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
+# m1_LIST=$(seq -f "%.3f" -s " " -1.0 0.1 1.0)
+# c1_LIST=$(seq -f "%.3f" -s " " 0.8 0.02 1.2)
+# c2_LIST=$(seq -f "%.3f" -s " " 0.4 0.01 0.6)
+# scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
+# b1_LIST=$(seq -f "%.3f" -s " " 0.0 0.2 4.0)
+# m2_LIST=$(seq -f "%.3f" -s " " -2.0 0.2 2.0)
+# gamma_q_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
 
 # ====================================================================
 # LOGGING SETUP
@@ -68,7 +80,20 @@ python3 $root/Code/CRI_dispersion.py \
     ${m2_LIST:+--m2 $m2_LIST} \
     ${gamma_q_LIST:+--gamma_q $gamma_q_LIST}
 
-echo "Generating heatmaps..."
+echo "Generating contours..."
+
+python3 $root/Code/sensitivity_contour.py \
+    ${F_LIST:+--F $F_LIST} \
+    ${f_LIST:+--f $f_LIST} \
+    ${m1_LIST:+--m1 $m1_LIST} \
+    ${c1_LIST:+--c1 $c1_LIST} \
+    ${c2_LIST:+--c2 $c2_LIST} \
+    ${scaling_factor_LIST:+--scaling_factor $scaling_factor_LIST} \
+    ${b1_LIST:+--b1 $b1_LIST} \
+    ${m2_LIST:+--m2 $m2_LIST} \
+    ${gamma_q_LIST:+--gamma_q $gamma_q_LIST}
+
+echo "Generating heatmaps (5-grid subset)..."
 
 python3 $root/Code/sensitivity_heatmap.py \
     ${F_LIST:+--F $F_LIST} \
@@ -96,9 +121,9 @@ if git -C "$PROJECT_ROOT" diff --cached --quiet; then
     echo "⚪ No changes detected to commit."
 else
     echo "🤖 Asking agy to write the commit message..."
-    # Capture the diff, limiting to 1000 lines to avoid massive prompts
-    DIFF=$(git -C "$PROJECT_ROOT" diff --cached | head -n 1000)
-    
+    # Capture the diff, limiting to 500 lines and excluding data/binary/notebook files to avoid massive prompts & argument limit errors
+    DIFF=$(git -C "$PROJECT_ROOT" diff --cached -- . ':(exclude)*.npy' ':(exclude)*.png' ':(exclude)*.ipynb' | head -n 500)
+    echo $DIFF
     # Use agy purely as a text generator to write the message
     COMMIT_MSG=$(agy -p "Write a semantic commit message for the following diff. Output ONLY the raw message text. Do NOT wrap it in markdown, do NOT include quotes, and do NOT include any conversational filler. Diff: $DIFF")
     
