@@ -77,41 +77,6 @@ class WaveParameters:
         return (self.F * (1 - self.f)) / self.b1
 
     @property
-    def U1(self) -> float:
-        """Effective velocity variable 1"""
-        return self.c1 * (1 - self.alpha_11)
-
-    @property
-    def U2(self) -> float:
-        """Effective velocity variable 2"""
-        return self.c2 * (1 - self.alpha_22)
-
-    @property
-    def V1(self) -> float:
-        """Effective velocity cross-variable 1"""
-        return self.c1 * self.alpha_21
-
-    @property
-    def V2(self) -> float:
-        """Effective velocity cross-variable 2"""
-        return self.c2 * self.alpha_12
-
-    @property
-    def A0(self) -> float:
-        """Quadratic form coefficient A0"""
-        return 1 + self.F1
-
-    @property
-    def B0(self) -> float:
-        """Quadratic form coefficient B0"""
-        return self.U1 + (self.U2 * (1 + self.F1)) + (self.V1 * self.F2)
-
-    @property
-    def C0(self) -> float:
-        """Quadratic form coefficient C0"""
-        return (self.U1 * self.U2) - (self.V1 * self.V2)
-
-    @property
-    def W0(self) -> float:
-        """Cross-forcing variable"""
-        return (self.U1 * self.F2) + (self.V2 * self.F1)
+    def Delta_alpha(self) -> float:
+        return (1-self.alpha_11)*(1-self.alpha_22) - \
+            self.alpha_12 * self.alpha_21

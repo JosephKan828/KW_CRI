@@ -14,14 +14,14 @@ EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 # ====================================================================
 
 # F_LIST="3.0 4.0 5.0"
-# f_LIST="0.0 0.25 0.5 0.75 1.0"
+f_LIST="0.0 0.25 0.5 0.75 1.0"
 # m1_LIST="-1.0 -0.5 0.0 0.5 1.0"
 # c1_LIST="0.8 1.0 1.2"
 # c2_LIST="0.4 0.5 0.6"
 # scaling_factor_LIST="0.0 0.1 0.5 1.0 2.0"
 # b1_LIST="0.0 1.0 2.0 3.0 4.0"
 # m2_LIST="-2.0 -1.0 0.0 1.0 2.0"
-gamma_q_LIST="0.0 0.25 0.5 0.7 1.0"
+# gamma_q_LIST="0.0 0.25 0.5 0.7 1.0"
 
 # ====================================================================
 # LOGGING SETUP
@@ -70,7 +70,7 @@ python3 $root/Code/CRI_dispersion.py \
 
 echo "Generating heatmaps..."
 
-python3 $root/Code/visualize_sensitivity.py \
+python3 $root/Code/sensitivity_heatmap.py \
     ${F_LIST:+--F $F_LIST} \
     ${f_LIST:+--f $f_LIST} \
     ${m1_LIST:+--m1 $m1_LIST} \

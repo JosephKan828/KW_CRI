@@ -350,3 +350,11 @@
 - `gamma_q_LIST`: 0.0 0.25 0.5 0.7 1.0
 ****
 
+
+### Experiment Run: 2026-06-26 16:39:05
+- **Description:** f sensitivity
+- **Git Commit:** `effa663`
+- **Swept Parameters:**
+- `f_LIST`: 0.0 0.25 0.5 0.75 1.0
+****
+

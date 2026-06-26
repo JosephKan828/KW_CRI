@@ -23,14 +23,21 @@ def compute_coefficients(
     """
     p = params
 
+
+
     # Vectorized computation mapping directly to the Markdown derivation
-    G3 = np.full_like(k_values, p.A0, dtype=np.complex128)
+    G3 = np.full_like(k_values, 1+p.F1, dtype=np.complex128)
     
-    G2 = -p.B0 * k_values - 1j * p.gamma_q * (p.m2 * p.A0 - p.m1 * p.F2)
+    G2 = p.gamma_q * (p.m2*(1+p.F1) - p.m1*p.F2) - \
+        1j * k_values * (p.c2 * (1-p.alpha_22)*(1+p.F1) + p.c1 * (1-p.alpha_11) + p.c1*p.alpha_21*p.F2)
     
-    G1 = (p.C0 * k_values**2) + 1j * p.gamma_q * k_values * (p.m2 * p.B0 - p.m1 * p.W0)
+    G1 = -1 * k_values**2 * p.c1 * p.c2 * p.Delta_alpha - \
+        1j * k_values * p.gamma_q * (
+            p.m2*(p.c2*(1-p.alpha_22)*(1+p.F1)+p.c1*(1-p.alpha_11) + p.c1*p.alpha_21*p.F2) -\
+                p.m1 * (p.c1*(1-p.alpha_11)*p.F2 + p.c2*p.alpha_12*p.F1)
+        )
     
-    G0 = -1j * p.gamma_q * p.m2 * p.C0 * k_values**2
+    G0 = -1 * k_values**2 * p.m2 * p.gamma_q * p.c1 * p.c2 *p.Delta_alpha
 
     return G3, G2, G1, G0
 
@@ -77,7 +84,7 @@ def solve_dispersion_roots(
     sorted_idx = np.argsort(np.real(roots_omega), axis=1)
     roots_omega = np.take_along_axis(roots_omega, sorted_idx, axis=1)
 
-    return roots_omega
+    return roots_omega * (-1j)
 
 
 def compute_dispersion(
@@ -109,5 +116,5 @@ def compute_dispersion(
         arr if flag else np.zeros_like(arr)
         for arr, flag in zip(coeffs, full_coeff)
         ]
-    print()
+
     return solve_dispersion_roots(*masked_coeffs)
