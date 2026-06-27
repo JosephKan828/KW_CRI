@@ -14,14 +14,22 @@ def track_roots(
     n_modes, nk = raw_roots.shape
     sorted_roots: np.ndarray = np.zeros_like(raw_roots)
 
-    sorted_roots[:, 0] = raw_roots[:, 0]
+    # Sort the initial roots by their real part (phase speed) to ensure 
+    # consistent ordering across different parameter values.
+    initial_idx = np.argsort(np.real(raw_roots[:, 0]))
+    sorted_roots[:, 0] = raw_roots[initial_idx, 0]
 
     for k in range(1, nk):
-        prev_roots = sorted_roots[:, k-1]
+        # Use linear extrapolation for better tracking during mode crossings
+        if k == 1:
+            predicted = sorted_roots[:, 0]
+        else:
+            predicted = sorted_roots[:, k-1] + (sorted_roots[:, k-1] - sorted_roots[:, k-2])
+            
         curr_roots = raw_roots[:, k]
         
-        # Calculate the complex distance matrix between previous and current roots
-        cost_matrix = np.abs(prev_roots[:, np.newaxis] - curr_roots[np.newaxis, :])
+        # Calculate the complex distance matrix between predicted and current roots
+        cost_matrix = np.abs(predicted[:, np.newaxis] - curr_roots[np.newaxis, :])
         
         # Solve bipartite matching to find optimal unique pairs
         row_ind, col_ind = linear_sum_assignment(cost_matrix)
