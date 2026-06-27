@@ -32,7 +32,7 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
         cf_instab = ax[0, i].contour(
             X, Y, instab_grid[..., i],
             levels=11,
-            cmap="k",
+            colors="k",
         )
         
         ax[0, i].set_title(mode_titles[i], fontsize=14, fontweight="bold")
@@ -49,7 +49,7 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
         cf_pspeed = ax[1, i].contour(
             X, Y, pspeed_grid[..., i],
             levels=11,
-            cmap="k",
+            colors="k",
         )
         
         ax[1, i].set_xlabel("Wavenumber ($k$)", fontsize=14)
