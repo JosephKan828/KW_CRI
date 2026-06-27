@@ -48,7 +48,9 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
             ax[0, i].set_yticks([])
         
         if i == 2:
-            fig.colorbar(cf_instab, ax=ax[0, i], orientation="vertical", shrink=0.8, aspect=40)
+            cbar = fig.colorbar(cf_instab, ax=ax[0, i], orientation="vertical", shrink=0.8, aspect=40)
+            cbar.set_ticks([-2, -1, 0, 1, 2])
+
 
         # --- Bottom Row: Phase Speed ---
         cf_pspeed = ax[1, i].contourf(
@@ -67,7 +69,8 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
             ax[1, i].set_yticks([])
 
         if i == 2:
-            fig.colorbar(cf_pspeed, ax=ax[1, i], orientation="vertical", shrink=0.8, aspect=40)
+            cbar = fig.colorbar(cf_pspeed, ax=ax[1, i], orientation="vertical", shrink=0.8, aspect=40)
+            cbar.set_ticks([-10, 0, 10, 20, 30, 40, 50])
 
     fig.suptitle(title, x=0.5, y=1.02, fontsize=16, fontweight="bold")
     
