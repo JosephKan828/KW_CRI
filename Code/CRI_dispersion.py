@@ -55,7 +55,7 @@ def run_experiment(param_dict, output_fig_dir, output_data_dir):
     # --- Subplot 1: Growth Rate ---
     for i in range(disp_rel.shape[1]):
         if i < len(ls_list):
-            ax[0].plot(k_dis, instab[:, sort_idx], color="k", linestyle=ls_list[i], 
+            ax[0].plot(k_dis, instab[:, i][:, sort_idx[i]], color="k", linestyle=ls_list[i], 
                        linewidth=2.5, label=mode_labels[i] if i < len(mode_labels) else f"Mode {i}")
             
     ax[0].axhline(0, color="k", linestyle="-", linewidth=1, alpha=0.5) 
@@ -69,7 +69,7 @@ def run_experiment(param_dict, output_fig_dir, output_data_dir):
     # --- Subplot 2: Phase Speed ---
     for i in range(disp_rel.shape[1]):
         if i < len(ls_list):
-            ax[1].plot(k_dis, pspeed[sort_idx], color="k", linestyle=ls_list[i], linewidth=2.5)
+            ax[1].plot(k_dis, pspeed[:, i][:, sort_idx[i]], color="k", linestyle=ls_list[i], linewidth=2.5)
 
     ax[1].set_ylabel("Phase Speed (m/s)", fontsize=13)
     ax[1].set_title("Phase Speed", fontsize=14, fontweight="bold")
