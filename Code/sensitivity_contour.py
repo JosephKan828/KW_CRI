@@ -1,5 +1,6 @@
 import argparse
 import decimal
+from matplotlib.colors import TwoSlopeNorm
 import numpy as np
 import seaborn as sns
 from typing import Dict
@@ -35,6 +36,7 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
             X, Y, instab_grid[..., i],
             levels=np.linspace(-2, 2, 21),
             cmap="RdBu_r",
+            norm=TwoSlopeNorm(vcenter=0),
             extend="both"
         )
         
@@ -51,8 +53,9 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
         # --- Bottom Row: Phase Speed ---
         cf_pspeed = ax[1, i].contourf(
             X, Y, pspeed_grid[..., i],
-            levels=np.linspace(-10, 50, 19),
+            levels=np.linspace(-10, 50, 18),
             cmap="RdBu_r",
+            norm=TwoSlopeNorm(vcenter=0),
             extend="both"
         )
         
