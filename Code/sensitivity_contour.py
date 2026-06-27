@@ -139,6 +139,11 @@ def main():
     # Slice the arrays to only include the target grid points
     instab_grid = instab_array[:, k_mask, :]
     pspeed_grid = pspeed_array[:, k_mask, :]
+
+    # Sort the modes based on phase speed at each (file, k) point
+    sort_idx = np.argsort(pspeed_grid, axis=2)
+    instab_grid = np.take_along_axis(instab_grid, sort_idx, axis=2)
+    pspeed_grid = np.take_along_axis(pspeed_grid, sort_idx, axis=2)
     
     print("Generating Combined Contour Plot...")
     plot_combined_contours(
