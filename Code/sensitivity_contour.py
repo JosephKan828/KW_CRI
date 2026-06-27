@@ -156,7 +156,7 @@ def main():
         k_dis=k_plot,
         title=f"{param_names} Sensitivity",
         ylabel="Parameters",
-        output_path=fig_dir / "sensitivity.png"
+        output_path=fig_dir / "sensitivity_contour.png"
     )
     
     print(f"Done! Figure saved to {fig_dir}/sensitivity.png")
