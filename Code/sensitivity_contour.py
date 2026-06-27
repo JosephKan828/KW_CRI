@@ -1,4 +1,5 @@
 import argparse
+import decimal
 import numpy as np
 import seaborn as sns
 from typing import Dict
@@ -29,9 +30,15 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
     
     for i in range(3):
         # --- Top Row: Instability ---
+        instab_level: np.ndarray = np.linspace(
+            (np.abs(instab_grid[..., i]).max() * -0.8).round(decimal=2),
+            (np.abs(instab_grid[..., i]).max() * 0.8).round(decimal=2),
+            11
+        )
+
         cf_instab = ax[0, i].contour(
             X, Y, instab_grid[..., i],
-            levels=11,
+            levels=instab_level,
             colors="k",
         )
         
@@ -45,10 +52,14 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
         plt.clabel(cf_instab, inline=True, fontsize=12)
 
         # --- Bottom Row: Phase Speed ---
-
+        pspeed_level: np.ndarray = np.linspace(
+            (np.abs(pspeed_grid[..., i]).max() * -0.8).round(decimal=2),
+            (np.abs(pspeed_grid[..., i]).max() * 0.8).round(decimal=2),
+            11
+        )
         cf_pspeed = ax[1, i].contour(
             X, Y, pspeed_grid[..., i],
-            levels=11,
+            levels=pspeed_level,
             colors="k",
         )
         
