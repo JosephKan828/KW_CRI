@@ -48,7 +48,7 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
         fig.colorbar(cf_instab, ax=ax[0, i], orientation="vertical", shrink=0.8, aspect=50)
 
         # --- Bottom Row: Phase Speed ---
-        cf_pspeed = ax[0, i].contourf(
+        cf_pspeed = ax[1, i].contourf(
             X, Y, pspeed_grid[..., i],
             levels=11,
             cmap="RdBu_r",
@@ -57,7 +57,7 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
         
         ax[1, i].set_xlabel("Wavenumber ($k$)", fontsize=14)
 
-        fig.colorbar(cf_pspeed, ax=ax[0, i], orientation="vertical", shrink=0.8, aspect=50)
+        fig.colorbar(cf_pspeed, ax=ax[1, i], orientation="vertical", shrink=0.8, aspect=50)
 
         if i == 0:
             ax[1, i].set_ylabel(f"Phase Speed", fontsize=14, fontweight="bold")
