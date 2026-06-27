@@ -2,10 +2,34 @@
 
 import numpy as np
 from typing import Tuple, Union, List
+from scipy.optimize import linear_sum_assignment
 
 # Import the dataclass from your local parameter.py script
 from parameter import WaveParameters
 
+def track_roots(
+    raw_roots: np.ndarray
+) -> np.ndarray:
+
+    n_modes, nk = raw_roots.shape
+    sorted_roots: np.ndarray = np.zeros_like(raw_roots)
+
+    sorted_roots[:, 0] = raw_roots[:, 0]
+
+    for k in range(1, nk):
+        prev_roots = sorted_roots[:, k-1]
+        curr_roots = raw_roots[:, k]
+        
+        # Calculate the complex distance matrix between previous and current roots
+        cost_matrix = np.abs(prev_roots[:, np.newaxis] - curr_roots[np.newaxis, :])
+        
+        # Solve bipartite matching to find optimal unique pairs
+        row_ind, col_ind = linear_sum_assignment(cost_matrix)
+        
+        # Map the current roots to their assigned rows
+        sorted_roots[row_ind, k] = curr_roots[col_ind]
+        
+    return sorted_roots
 
 def compute_coefficients(
     params: WaveParameters, k_values: np.ndarray
@@ -78,14 +102,9 @@ def solve_dispersion_roots(
             
         roots_omega.append(roots)
 
-    roots_omega = np.array(roots_omega)
-
-    # Vectorized sorting of roots by their real part (phase speed)
-    sorted_idx = np.argsort(np.real(roots_omega), axis=1)
-    roots_omega = np.take_along_axis(roots_omega, sorted_idx, axis=1)
-
-    return roots_omega * (-1j)
-
+    roots_omega = np.array(roots_omega) * (-1j)
+    
+    return track_roots(roots_omega.T).T
 
 def compute_dispersion(
     params: WaveParameters,
