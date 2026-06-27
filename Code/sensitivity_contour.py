@@ -29,43 +29,37 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
     
     for i in range(3):
         # --- Top Row: Instability ---
-        levels_instab = np.linspace(-2.0, 2.0, 21)
-        cf_instab = ax[0, i].contourf(
+        cf_instab = ax[0, i].contour(
             X, Y, instab_grid[..., i],
-            levels=levels_instab,
-            cmap="coolwarm",
-            extend="both"
+            levels=11,
+            cmap="k",
         )
         
         ax[0, i].set_title(mode_titles[i], fontsize=14, fontweight="bold")
         
         if i == 0:
-            ax[0, i].set_ylabel(f"Instability\n{ylabel}", fontsize=14, fontweight="bold")
+            ax[0, i].set_ylabel(f"Instability", fontsize=14, fontweight="bold")
         else:
             ax[0, i].set_yticks([])
-            
-        # Optional colorbar label
-        if i == 2:
-            cbar = fig.colorbar(cf_instab, ax=ax[0, i])
+        
+        plt.clabel(cf_instab, inline=True, fontsize=12)
 
         # --- Bottom Row: Phase Speed ---
-        levels_pspeed = np.linspace(-15.0, 45.0, 31)
-        cf_pspeed = ax[1, i].contourf(
+
+        cf_pspeed = ax[1, i].contour(
             X, Y, pspeed_grid[..., i],
-            levels=levels_pspeed,
-            cmap="coolwarm",
-            extend="both"
+            levels=11,
+            cmap="k",
         )
         
         ax[1, i].set_xlabel("Wavenumber ($k$)", fontsize=14)
         
         if i == 0:
-            ax[1, i].set_ylabel(f"Phase Speed\n{ylabel}", fontsize=14, fontweight="bold")
+            ax[1, i].set_ylabel(f"Phase Speed", fontsize=14, fontweight="bold")
         else:
             ax[1, i].set_yticks([])
-            
-        if i == 2:
-            cbar = fig.colorbar(cf_pspeed, ax=ax[1, i])
+
+        plt.clabel(cf_pspeed, inline=True, fontsize=12)
 
     fig.suptitle(title, x=0.5, y=1.02, fontsize=16, fontweight="bold")
     
@@ -149,7 +143,7 @@ def main():
         pspeed_grid=pspeed_grid[labels_argsort],
         labels=labels[labels_argsort],
         k_dis=k_plot,
-        title="Dispersion Relation Sensitivity",
+        title=f"{param_names} Sensitivity",
         ylabel="Parameters",
         output_path=fig_dir / "sensitivity.png"
     )
