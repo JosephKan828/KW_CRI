@@ -41,7 +41,7 @@ def run_experiment(param_dict, output_fig_dir, output_data_dir):
     # Calculate instability and phase speed
     instab: np.ndarray = -1*disp_rel.imag
 
-    pspeed: np.ndarray = (disp_rel.real / k_cal) * 50 
+    pspeed: np.ndarray = (disp_rel.real / k_cal[:, None]) * 50 
     
     sort_idx: np.ndarray = np.argsort(pspeed, axis=1)
 
