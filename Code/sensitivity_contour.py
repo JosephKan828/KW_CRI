@@ -22,7 +22,7 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
                            ylabel: str, output_path: Path):
     """Generate and save a (2, 3) contour plot for instability and phase speed."""
     plt.rcParams.update({"font.family": "serif"})
-    fig, ax = plt.subplots(2, 3, figsize=(16, 7))
+    fig, ax = plt.subplots(2, 3, figsize=(18, 7))
     
     mode_titles = ["Slow Mode", "Intermediate Mode", "Fast Wave"]
     
@@ -30,16 +30,12 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
     
     for i in range(3):
         # --- Top Row: Instability ---
-        instab_level: np.ndarray = np.linspace(
-            np.round(np.abs(instab_grid[..., i]).max() * -0.8, decimals=True),
-            np.round(np.abs(instab_grid[..., i]).max() * 0.8, decimals=True),
-            11
-        )
 
-        cf_instab = ax[0, i].contour(
+        cf_instab = ax[0, i].contourf(
             X, Y, instab_grid[..., i],
-            levels=instab_level,
-            colors="k",
+            levels=11,
+            cmap="RdBu_r",
+            extend="both"
         )
         
         ax[0, i].set_title(mode_titles[i], fontsize=14, fontweight="bold")
@@ -49,28 +45,24 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
         else:
             ax[0, i].set_yticks([])
         
-        plt.clabel(cf_instab, inline=True, fontsize=12)
+        fig.colorbar(cf_instab, ax=ax[0, i], orientation="vertical", shrink=0.8, aspect=50)
 
         # --- Bottom Row: Phase Speed ---
-        pspeed_level: np.ndarray = np.linspace(
-            np.round(np.abs(pspeed_grid[..., i]).max() * -0.8, decimals=2),
-            np.round(np.abs(pspeed_grid[..., i]).max() * 0.8, decimals=2),
-            11
-        )
-        cf_pspeed = ax[1, i].contour(
+        cf_pspeed = ax[0, i].contourf(
             X, Y, pspeed_grid[..., i],
-            levels=pspeed_level,
-            colors="k",
+            levels=11,
+            cmap="RdBu_r",
+            extend="both"
         )
         
         ax[1, i].set_xlabel("Wavenumber ($k$)", fontsize=14)
-        
+
+        fig.colorbar(cf_pspeed, ax=ax[0, i], orientation="vertical", shrink=0.8, aspect=50)
+
         if i == 0:
             ax[1, i].set_ylabel(f"Phase Speed", fontsize=14, fontweight="bold")
         else:
             ax[1, i].set_yticks([])
-
-        plt.clabel(cf_pspeed, inline=True, fontsize=12)
 
     fig.suptitle(title, x=0.5, y=1.02, fontsize=16, fontweight="bold")
     
