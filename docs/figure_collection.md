@@ -39,7 +39,7 @@ Analytical form of dispersion relation is documented in [this file](CRI_dispersi
 
 # Default Experiment
 
-![width:80%](../Figure/f_sensitivity/f=0.5.png)
+![width:80%](../Figure/f_sensitivity/single/f=0.5.png)
 
 There are three types of disturbances in this system, moisture mode, convectively couple wave, and fast gravity wave are classified through their own phase speed, which follows Fuch and Raymond (2007). 
 
@@ -47,37 +47,37 @@ There are three types of disturbances in this system, moisture mode, convectivel
 
 # Change $f$
 
-![width:80%](../Figure/f_sensitivity/sensitivity.png)
+![width:80%](../Figure/f_sensitivity/sensitivity_contour.png)
 
 ---
 
 # Change $b_1$
 
-![width:80%](../Figure/b1_sensitivity/sensitivity.png)
+![width:80%](../Figure/b1_sensitivity/sensitivity_contour.png)
 
 ---
 
 # Change $\gamma_q$
 
-![width:80%](../Figure/gamma_q_sensitivity/sensitivity.png)
+![width:80%](../Figure/gamma_q_sensitivity/sensitivity_contour.png)
 
 ---
 
 # Change $m_1$
 
-![width:80%](../Figure/m1_sensitivity/sensitivity.png)
+![width:80%](../Figure/m1_sensitivity/sensitivity_contour.png)
 
 ---
 
 # Change $m_2$
 
-![width:80%](../Figure/m2_sensitivity/sensitivity.png)
+![width:80%](../Figure/m2_sensitivity/sensitivity_contour.png)
 
 ---
 
 # Change Radiative Heating Rate
 
-![width:80%](../Figure/scaling_factor_sensitivity/sensitivity.png)
+![width:80%](../Figure/scaling_factor_sensitivity/sensitivity_contour.png)
 
 ---
 
