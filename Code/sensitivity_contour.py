@@ -31,8 +31,8 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
     for i in range(3):
         # --- Top Row: Instability ---
         instab_level: np.ndarray = np.linspace(
-            (np.abs(instab_grid[..., i]).max() * -0.8).round(decimal=2),
-            (np.abs(instab_grid[..., i]).max() * 0.8).round(decimal=2),
+            np.round(np.abs(instab_grid[..., i]).max() * -0.8, decimals=True),
+            np.round(np.abs(instab_grid[..., i]).max() * 0.8, decimals=True),
             11
         )
 
@@ -53,8 +53,8 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
 
         # --- Bottom Row: Phase Speed ---
         pspeed_level: np.ndarray = np.linspace(
-            (np.abs(pspeed_grid[..., i]).max() * -0.8).round(decimal=2),
-            (np.abs(pspeed_grid[..., i]).max() * 0.8).round(decimal=2),
+            np.round(np.abs(pspeed_grid[..., i]).max() * -0.8, decimals=2),
+            np.round(np.abs(pspeed_grid[..., i]).max() * 0.8, decimals=2),
             11
         )
         cf_pspeed = ax[1, i].contour(
