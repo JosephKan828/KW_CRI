@@ -53,7 +53,7 @@ def plot_combined_contours(instab_grid: np.ndarray, pspeed_grid: np.ndarray,
         # --- Bottom Row: Phase Speed ---
         cf_pspeed = ax[1, i].contourf(
             X, Y, pspeed_grid[..., i],
-            levels=np.linspace(-10, 50, 18),
+            levels=np.linspace(-10, 50, 21),
             cmap="RdBu_r",
             norm=TwoSlopeNorm(vcenter=0),
             extend="both"
