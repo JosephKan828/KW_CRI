@@ -28,10 +28,10 @@ MODE=${2:-"full"}
 # Dense grid configurations (~100 samples) across the same boundaries:
 # F_LIST=$(seq -f "%.3f" -s " " 3.0 0.02 5.0)
 # f_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
-m1_LIST=$(seq -f "%.3f" -s " " -1.0 0.1 1.0)
+# m1_LIST=$(seq -f "%.3f" -s " " -1.0 0.1 1.0)
 # c1_LIST=$(seq -f "%.3f" -s " " 0.8 0.02 1.2)
 # c2_LIST=$(seq -f "%.3f" -s " " 0.4 0.01 0.6)
-# scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
+scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
 # b1_LIST=$(seq -f "%.3f" -s " " 0.0 0.2 4.0)
 # m2_LIST=$(seq -f "%.3f" -s " " -2.0 0.2 2.0)
 # gamma_q_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
