@@ -33,8 +33,8 @@ MODE=${2:-"full"}
 # c2_LIST=$(seq -f "%.3f" -s " " 0.4 0.01 0.6)
 # scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
 # b1_LIST=$(seq -f "%.3f" -s " " 0.0 0.2 4.0)
-m2_LIST=$(seq -f "%.3f" -s " " -2.0 0.2 2.0)
-# gamma_q_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
+# m2_LIST=$(seq -f "%.3f" -s " " -2.0 0.2 2.0)
+gamma_q_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
 
 # ====================================================================
 # LOGGING SETUP
