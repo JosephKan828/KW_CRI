@@ -70,7 +70,7 @@ echo "Starting dispersion sensitivity sweep ($EXPERIMENT_DESC) with mode $MODE..
 
 # Using bash parameter expansion ${VAR:+...} to only include the flag 
 # if the variable is defined and not empty. 
-python3 $root/Code/CRI_dispersion_mode.py \
+python3 $root/Code/CRI_dispersion.py \
     --mode $MODE \
     ${F_LIST:+--F $F_LIST} \
     ${f_LIST:+--f $f_LIST} \
@@ -84,7 +84,7 @@ python3 $root/Code/CRI_dispersion_mode.py \
 
 echo "Generating contours..."
 
-python3 $root/Code/sensitivity_contour_mode.py \
+python3 $root/Code/sensitivity_contour.py \
     --mode $MODE \
     ${F_LIST:+--F $F_LIST} \
     ${f_LIST:+--f $f_LIST} \
@@ -98,7 +98,7 @@ python3 $root/Code/sensitivity_contour_mode.py \
 
 echo "Generating heatmaps (5-grid subset)..."
 
-python3 $root/Code/sensitivity_heatmap_mode.py \
+python3 $root/Code/sensitivity_heatmap.py \
     --mode $MODE \
     ${F_LIST:+--F $F_LIST} \
     ${f_LIST:+--f $f_LIST} \
