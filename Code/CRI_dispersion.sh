@@ -113,22 +113,5 @@ echo "Sweep and visualization finished successfully. Setup logged to $LOG_FILE."
 # ====================================================================
 echo "Automatically committing and pushing changes to GitHub..."
 
-# Add all changes across the entire project (not just the Code/ directory)
 PROJECT_ROOT="/home/b11209013/KW_CRI"
-git -C "$PROJECT_ROOT" add .
-
-if git -C "$PROJECT_ROOT" diff --cached --quiet; then
-    echo "⚪ No changes detected to commit."
-else
-    echo "🤖 Asking agy to write the commit message..."
-    # Capture the diff, limiting to 500 lines and excluding data/binary/notebook files to avoid massive prompts & argument limit errors
-    DIFF=$(git -C "$PROJECT_ROOT" diff --cached -- . ':(exclude)*.npy' ':(exclude)*.png' ':(exclude)*.ipynb' | head -n 500)
-    
-    # Use agy purely as a text generator to write the message
-    COMMIT_MSG=$(agy -p "Write a semantic commit message for the following diff. Output ONLY the raw message text. Do NOT wrap it in markdown, do NOT include quotes, and do NOT include any conversational filler. Diff: $DIFF")
-    
-    echo "📝 Commit Message: $COMMIT_MSG"
-    git -C "$PROJECT_ROOT" commit -m "$COMMIT_MSG"
-    git -C "$PROJECT_ROOT" push
-    echo "✅ Changes successfully pushed to GitHub."
-fi
+bash -ic "gpush \"$PROJECT_ROOT\""
