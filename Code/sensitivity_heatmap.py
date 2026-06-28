@@ -95,6 +95,7 @@ def main():
     parser.add_argument("--m1", type=float, nargs="+", help="Moisture coupling parameter for mode 1")
     parser.add_argument("--m2", type=float, nargs="+", help="Moisture coupling parameter for mode 2")
     parser.add_argument("--gamma_q", type=float, nargs="+", help="Moisture relaxation rate")
+    parser.add_argument("--mode", type=str, choices=["full", "simplified"], default="full", help="Experiment mode")
     
     args = parser.parse_args()
     
@@ -108,8 +109,8 @@ def main():
     keys = list(param_grids.keys())
     param_names = "_".join(keys) if keys else "default"
     
-    data_dir = Path(f"/home/b11209013/KW_CRI/File/{param_names}_sensitivity")
-    fig_dir = Path(f"/home/b11209013/KW_CRI/Figure/{param_names}_sensitivity")
+    data_dir = Path(f"/home/b11209013/KW_CRI/File/{param_names}_sensitivity_{args.mode}")
+    fig_dir = Path(f"/home/b11209013/KW_CRI/Figure/{param_names}_sensitivity_{args.mode}")
     
     print(f"Loading data from {data_dir}...")
     disp_roots = load_data(data_dir)

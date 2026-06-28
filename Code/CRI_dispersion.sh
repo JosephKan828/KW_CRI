@@ -6,8 +6,9 @@ root="/home/b11209013/KW_CRI"
 # SENSITIVITY SWEEP TARGETING VARIABLES
 # ====================================================================
 # Optional: Add a description when running the script 
-# e.g., ./CRI_dispersion.sh "Testing moisture sensitivity"
+# e.g., ./CRI_dispersion_mode.sh "Testing moisture sensitivity" "simplified"
 EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
+MODE=${2:-"full"}
 
 # ====================================================================
 # Parameter setup
@@ -65,11 +66,12 @@ echo "" >> "$LOG_FILE"
 # ====================================================================
 # EXECUTE SCRIPT
 # ====================================================================
-echo "Starting dispersion sensitivity sweep ($EXPERIMENT_DESC)..."
+echo "Starting dispersion sensitivity sweep ($EXPERIMENT_DESC) with mode $MODE..."
 
 # Using bash parameter expansion ${VAR:+...} to only include the flag 
 # if the variable is defined and not empty. 
-python3 $root/Code/CRI_dispersion.py \
+python3 $root/Code/CRI_dispersion_mode.py \
+    --mode $MODE \
     ${F_LIST:+--F $F_LIST} \
     ${f_LIST:+--f $f_LIST} \
     ${m1_LIST:+--m1 $m1_LIST} \
@@ -82,7 +84,8 @@ python3 $root/Code/CRI_dispersion.py \
 
 echo "Generating contours..."
 
-python3 $root/Code/sensitivity_contour.py \
+python3 $root/Code/sensitivity_contour_mode.py \
+    --mode $MODE \
     ${F_LIST:+--F $F_LIST} \
     ${f_LIST:+--f $f_LIST} \
     ${m1_LIST:+--m1 $m1_LIST} \
@@ -95,7 +98,8 @@ python3 $root/Code/sensitivity_contour.py \
 
 echo "Generating heatmaps (5-grid subset)..."
 
-python3 $root/Code/sensitivity_heatmap.py \
+python3 $root/Code/sensitivity_heatmap_mode.py \
+    --mode $MODE \
     ${F_LIST:+--F $F_LIST} \
     ${f_LIST:+--f $f_LIST} \
     ${m1_LIST:+--m1 $m1_LIST} \

@@ -12,7 +12,7 @@ sys.path.append("/home/b11209013/KW_CRI/src")
 from parameter import WaveParameters
 from calc_dispersion import compute_dispersion
 
-def run_experiment(param_dict, output_fig_dir, output_data_dir):
+def run_experiment(param_dict, output_fig_dir, output_data_dir, mode):
     """
     Run dispersion calculation and generate plots for a given set of parameters.
     """
@@ -30,6 +30,11 @@ def run_experiment(param_dict, output_fig_dir, output_data_dir):
     
     # Initialize parameters dynamically with the varying dictionary
     params = WaveParameters(**param_dict)
+    
+    if mode == "simplified":
+        params.alpha_11_o = 0.0
+        params.alpha_12_o = 0.0
+        params.alpha_22_o = 0.0
     
     # solve dispersion relation
     disp_rel = compute_dispersion(params, k_cal, [True, True, True, True])
@@ -88,9 +93,9 @@ def run_experiment(param_dict, output_fig_dir, output_data_dir):
     print(f"Finished processing for {modification}")
 
 def run_single_experiment_wrapper(args):
-    exp_dict, fig_dir, data_dir = args
+    exp_dict, fig_dir, data_dir, mode = args
     try:
-        run_experiment(exp_dict, fig_dir, data_dir)
+        run_experiment(exp_dict, fig_dir, data_dir, mode)
     except Exception as e:
         print(f"Experiment {exp_dict} failed with exception: {e}")
 
@@ -107,7 +112,7 @@ def main():
     parser.add_argument("--m1", type=float, nargs="+", help="Moisture coupling parameter for mode 1")
     parser.add_argument("--m2", type=float, nargs="+", help="Moisture coupling parameter for mode 2")
     parser.add_argument("--gamma_q", type=float, nargs="+", help="Moisture relaxation rate")
-    
+    parser.add_argument("--mode", type=str, choices=["full", "simplified"], default="full", help="Experiment mode")
     
     args = parser.parse_args()
     
@@ -133,8 +138,8 @@ def main():
     
     # form figure directory and data directory
     param_names = "_".join(keys) if keys else "default"
-    fig_dir : Path = Path(f"/home/b11209013/KW_CRI/Figure/{param_names}_sensitivity")
-    data_dir: Path = Path(f"/home/b11209013/KW_CRI/File/{param_names}_sensitivity")
+    fig_dir : Path = Path(f"/home/b11209013/KW_CRI/Figure/{param_names}_sensitivity_{args.mode}")
+    data_dir: Path = Path(f"/home/b11209013/KW_CRI/File/{param_names}_sensitivity_{args.mode}")
 
     os.makedirs(fig_dir, exist_ok=True)
     os.makedirs(data_dir, exist_ok=True)
@@ -142,7 +147,7 @@ def main():
 
     # Execute in parallel
     print(f"Starting parallel execution using {multiprocessing.cpu_count()} cores...")
-    args_list = [(exp, fig_dir, data_dir) for exp in experiments]
+    args_list = [(exp, fig_dir, data_dir, args.mode) for exp in experiments]
     with multiprocessing.Pool(8) as pool:
         pool.map(run_single_experiment_wrapper, args_list)
             
