@@ -31,6 +31,10 @@ class WaveParameters:
     m1: float = 0.3
     m2: float = 1.0
     gamma_q: float = 0.7
+    alpha_11_o: float = 0.0763
+    alpha_12_o: float = -0.0585
+    alpha_21_o: float = 0.118
+    alpha_22_o: float = -0.141
 
     def __post_init__(self) -> None:
         """Validates constraints immediately after initialization."""
@@ -45,22 +49,22 @@ class WaveParameters:
     @property
     def alpha_11(self) -> float:
         """CRI coupling parameter (mode 1 to 1)"""
-        return 0.0763 * self.scaling_factor
+        return self.alpha_11_o * self.scaling_factor
 
     @property
     def alpha_12(self) -> float:
         """CRI coupling parameter (mode 2 to 1)"""
-        return 0.118 * self.scaling_factor
+        return self.alpha_12_o * self.scaling_factor
 
     @property
     def alpha_21(self) -> float:
         """CRI coupling parameter (mode 1 to 2)"""
-        return -0.0585 * self.scaling_factor
+        return self.alpha_21_o * self.scaling_factor
 
     @property
     def alpha_22(self) -> float:
         """CRI coupling parameter (mode 2 to 2)"""
-        return -0.141 * self.scaling_factor
+        return self.alpha_22_o * self.scaling_factor
 
     # ---------------------------------------------------------
     # Derived Properties based on the Derivation Document
