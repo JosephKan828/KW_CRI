@@ -14,21 +14,10 @@ MODE=${2:-"full"}
 # Parameter setup
 # ====================================================================
 
-# Original configurations:
-# F_LIST="3.0 4.0 5.0"
-# f_LIST="0.0 0.25 0.5 0.75 1.0"
-# m1_LIST="-1.0 -0.5 0.0 0.5 1.0"
-# c1_LIST="0.8 1.0 1.2"
-# c2_LIST="0.4 0.5 0.6"
-# scaling_factor_LIST="0.0 0.1 0.5 1.0 2.0"
-# b1_LIST="0.0 1.0 2.0 3.0 4.0"
-# m2_LIST="-2.0 -1.0 0.0 1.0 2.0"
-# gamma_q_LIST="0.0 0.25 0.5 0.7 1.0"
-
 # Dense grid configurations (~100 samples) across the same boundaries:
 # F_LIST=$(seq -f "%.3f" -s " " 3.0 0.02 5.0)
-# f_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
-m1_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
+f_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
+# m1_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
 # c1_LIST=$(seq -f "%.3f" -s " " 0.8 0.02 1.2)
 # c2_LIST=$(seq -f "%.3f" -s " " 0.4 0.01 0.6)
 # scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
