@@ -1,93 +1,170 @@
-# Derivation of the Dispersion Relation
+# Kuang (2008) + CRI Dispersion Relation Deduction
 
-This document details the step-by-step mathematical deduction of the dispersion relation for the given coupled thermodynamic system.
+## 1. Governing Equations and Assumptions
 
-## 1. Initial System of Equations
+Assuming the following parameter simplifications:
 
-The original system consists of three prognostic equations for $T_1$, $T_2$, and $q$, and two diagnostic equations for the forcing terms $J_1$ and $J_2$:
+* $b_1 = 0$
+* $\epsilon = 0$
+* $\tau_j = 0$
+* Radiative feedback only exists between the 1st mode vertical motion and the 2nd mode vertical motion, implying $ lpha_{1,1} =  lpha_{1,2} =  lpha_{2,2} = 0$.
 
-$$\frac{\partial T_{1}}{\partial t} + c_{1}\frac{\partial T_{1}}{\partial x} = J_{1} + \alpha_{1, 1} c_1 \frac{\partial T_1}{\partial x} + \alpha_{1, 2} c_2 \frac{\partial T_2}{\partial x} \quad (1)$$
-$$\frac{\partial T_{2}}{\partial t} + c_{2}\frac{\partial T_{2}}{\partial x} = J_{2} + \alpha_{2, 1} c_1 \frac{\partial T_1}{\partial x} + \alpha_{2, 2} c_2 \frac{\partial T_2}{\partial x} \quad (2)$$
-$$\frac{\partial q}{\partial t} = m_{1}J_{1} + m_{2}J_{2} \quad (3)$$
-$$J_{1} = -\frac{F}{b_{1}}\left( f\frac{\partial T_{1}}{\partial t} + (1-f)\frac{\partial T_{2}}{\partial t} \right) \quad (4)$$
-$$J_{2} = -\gamma_{q}q \quad (5)$$
+The linearized system of governing equations is given by:
 
-### Substitution
-Substituting $J_1$ and $J_2$ into equations (1)-(3) yields:
-1. $\frac{\partial T_{1}}{\partial t} + c_{1}\frac{\partial T_{1}}{\partial x} = -\frac{F}{b_{1}}\left( f\frac{\partial T_{1}}{\partial t} + (1-f)\frac{\partial T_{2}}{\partial t} \right) +\alpha_{1, 1} c_1 \frac{\partial T_1}{\partial x} +\alpha_{1, 2} c_2 \frac{\partial T_2}{\partial x}$
-2. $\frac{\partial T_{2}}{\partial t} + c_{2}\frac{\partial T_{2}}{\partial x} = -\gamma_{q}q +\alpha_{2, 1} c_1 \frac{\partial T_1}{\partial x} +\alpha_{2, 2} c_2 \frac{\partial T_2}{\partial x}$
-3. $\frac{\partial q}{\partial t} = -\frac{m_{1}F}{b_{1}}\left( f\frac{\partial T_{1}}{\partial t} + (1-f)\frac{\partial T_{2}}{\partial t} \right) - m_{2}\gamma_{q}q$
+$$\frac{\partial T_1}{\partial t} + c_1 \frac{\partial T_1}{\partial x} = J_1$$
+
+$$\frac{\partial T_2}{\partial t} + c_2 \frac{\partial T_2}{\partial x} = J_2 + \alpha_{2,1} c_1 \frac{\partial T_1}{\partial x}$$
+
+$$\frac{\partial q}{\partial t} = m_1 J_1 + m_2 J_2$$
+
+Where the moisture/heating source functions are parameterized as:
+
+$$J_1 = -\frac{E}{b_1} \frac{\partial}{\partial t}\left[f T_1 + (1-f) T_2\right]$$
+
+$$J_2 = -\gamma_q q$$
 
 ---
 
-## 2. Plane Wave Projection (Polarized Equations)
+## 2. Normal Mode Ansatz & Fourier Transformation
 
-We project the variables onto the normal mode solutions:
-$$(T_1, T_2, q) = (\hat{T}_1, \hat{T}_2, \hat{q}) e^{i(\omega t - kx)}$$
-This maps the operators as follows: $\frac{\partial}{\partial t} \rightarrow i\omega$ and $\frac{\partial}{\partial x} \rightarrow -ik$.
+We substitute the plane-wave solutions of the form:
 
-Multiplying the entire system by $-i$ (since $(-i)(i) = 1$) to keep terms real, and defining the fractional forcing coefficients:
-* $F_1 = \frac{Ff}{b_1}$
-* $F_2 = \frac{F(1-f)}{b_1}$
+$$\begin{pmatrix} T_1 \\ T_2 \\ q \end{pmatrix} = \sum_{\omega, k} \begin{pmatrix} \hat{T}_1 \\ \hat{T}_2 \\ \hat{q} \end{pmatrix} \exp(i\omega t - ikx)$$
 
-The algebraic system becomes:
-1. $\left[ \omega(1 + F_{1}) - kc_{1}(1 - \alpha_{1,1}) \right]\hat{T}_{1} + \left[ \omega F_{2} + kc_{2}\alpha_{1,2} \right]\hat{T}_{2} = 0$
-2. $(kc_{1}\alpha_{2,1})\hat{T}_{1} + \left[ \omega - kc_{2}(1 - \alpha_{2,2}) \right]\hat{T}_{2} - i\gamma_{q}\hat{q} = 0$
-3. $(\omega m_{1}F_{1})\hat{T}_{1} + (\omega m_{1}F_{2})\hat{T}_{2} + (\omega - i m_{2}\gamma_{q})\hat{q} = 0$
+Substituting these forms transforms the spatial and temporal derivatives into algebraic terms ($\partial_t → i\omega$, $\partial_x → -ik$):
+
+$$
+\begin{aligned}
+i\omega \hat{T}_1 - ikc_1 \hat{T}_1 &= -\frac{E}{b_1} f (i\omega) \hat{T}_1 - \frac{E}{b_1} (1-f) (i\omega) \hat{T}_2 \\
+i\omega \hat{T}_2 - ikc_2 \hat{T}_2 &= -\gamma_q \hat{q} - ikc_1 \alpha_{2,1} \hat{T}_1 \\
+i\omega \hat{q} &= -\frac{E}{b_1} m_1 (i\omega) \left[f \hat{T}_1 + (1-f) \hat{T}_2\right] - m_2 \gamma_q \hat{q}
+\end{aligned}
+$$
+
+### Rearranging Terms
+
+Grouping the frequency $\omega$ terms on the left-hand side and the wavenumber $k$ and damping terms on the right-hand side:
+
+$$
+\begin{aligned}
+i\omega \hat{T}_1 + \frac{E}{b_1} f (i\omega) \hat{T}_1 + \frac{E}{b_1} (1-f) (i\omega) \hat{T}_2 &= ikc_1 \hat{T}_1 \\
+i\omega \hat{T}_2 &= -ikc_1 \alpha_{2,1} \hat{T}_1 + ikc_2 \hat{T}_2 - \gamma_q \hat{q} \\
+\frac{E}{b_1} m_1 (i\omega) f \hat{T}_1 + \frac{E}{b_1} m_1 (i\omega) (1-f) \hat{T}_2 + i\omega \hat{q} &= -m_2 \gamma_q \hat{q}
+\end{aligned}
+$$
 
 ---
 
 ## 3. Matrix Formulation
 
-The system can be written as a homogeneous matrix equation $\mathbf{M}' \mathbf{v} = 0$, where $\mathbf{v} = [\hat{T}_1, \hat{T}_2, \hat{q}]^T$:
+The system can be compactly expressed as a generalized eigenvalue problem:
+
+$$(iω) 𝐌 \vec{\nu} = 𝐋 \vec{\nu} ⟹ (i\omega 𝐌 - 𝐋) \vec{\nu} = \vec{0}$$
+
+Where the state vector is $\vec{\nu} = \begin{pmatrix} \hat{T}_1 & \hat{T}_2 & \hat{q} \end{pmatrix}^T$, and the matrices $\mathbf{M}$ and $\mathbf{L}$ are:
 
 $$
-\mathbf{M}' = 
-\begin{bmatrix}
-\omega(1 + F_{1}) - kc_{1}(1 - \alpha_{1,1}) & \omega F_{2} + kc_{2}\alpha_{1,2} & 0 \\
-kc_{1}\alpha_{2,1} & \omega - kc_{2}(1 - \alpha_{2,2}) & -i\gamma_{q} \\
-\omega m_{1}F_{1} & \omega m_{1}F_{2} & \omega - i m_{2}\gamma_{q}
-\end{bmatrix}
+\begin{aligned}
+𝐌 &= \begin{pmatrix} 1 + \frac{E}{b_1}f & \frac{E}{b_1}(1-f) & 0 \\ 0 & 1 & 0 \\ \frac{E}{b_1} f m_1 & \frac{E}{b_1}(1-f)m_1 & 1 \end{pmatrix}, \\
+𝐋 &= \begin{pmatrix} ikc_1 & 0 & 0 \\ -ikc_1 \alpha_{2,1} & ikc_2 & -\gamma_q \\ 0 & 0 & -m_2 \gamma_q \end{pmatrix}
+\end{aligned}
 $$
 
-To define the dispersion relation cleanly, we define effective velocity variables:
-* $U_{1} = c_{1}(1 - \alpha_{1,1})$
-* $U_{2} = c_{2}(1 - \alpha_{2,2})$
-* $V_{1} = c_{1}\alpha_{2,1}$
-* $V_{2} = c_{2}\alpha_{1,2}$
+To simplify notation, we define:
+$$\beta_1 = \frac{E}{b_1}f, \quad \beta_2 = \frac{E}{b_1}(1-f)$$
+
+Thus, the characteristic matrix $(i\omega 𝐌 - \mathbf{L})$ becomes:
+
+$$(i\omega 𝐌 - \mathbf{L}) = \begin{pmatrix} i(1+\beta_1)\omega - ikc_1 & i\beta_2\omega & 0 \\ ikc_1 \alpha_{2,1} & i\omega - ikc_2 & \gamma_q \\ im_1\beta_1\omega & im_1\beta_2\omega & i\omega + m_2\gamma_q \end{pmatrix}$$
 
 ---
 
-## 4. Determinant Expansion
+## 4. Determinant and Characteristic Equation
 
-The dispersion relation requires $\det(\mathbf{M}') = 0$. Expanding along the first row:
-$$\det(\mathbf{M}') = M_{33}(M_{11}M_{22} - M_{12}M_{21}) - M_{23}(M_{11}M_{32} - M_{12}M_{31})$$
+For non-trivial solutions, we require $\det(i\omega 𝐌 - 𝐋) = 0$. Expanding along the third column:
 
-The $2 \times 2$ sub-determinant $(M_{11}M_{22} - M_{12}M_{21})$ expands into a quadratic form in $\omega$:
-$$A_0 \omega^2 - B_0 k \omega + C_0 k^2$$
+$$
+\begin{aligned}
+\det(i\omega 𝐌 - 𝐋) &= -\gamma_q \begin{vmatrix} i(1+\beta_1)\omega - ikc_1 & i\beta_2\omega \\ im_1\beta_1\omega & im_1\beta_2\omega \end{vmatrix} \\
+&\quad + (i\omega + m_2\gamma_q) \begin{vmatrix} i(1+\beta_1)\omega - ikc_1 & i\beta_2\omega \\ ikc_1\alpha_{2,1} & i\omega - ikc_2 \end{vmatrix} \\
+&= 0
+\end{aligned}
+$$
 
-Where the newly-defined polynomial coefficients are:
-* $A_{0} = 1+F_{1}$
-* $B_{0} = U_{1} + U_{2}(1+F_{1}) + V_{1}F_{2}$
-* $C_{0} = U_{1}U_{2} - V_{1}V_{2}$
+Evaluating the $2 × 2$ determinants and gathering terms by powers of $\omega$ yields the cubic dispersion relation:
 
-The second half of the determinant (the cross-coupling term) simplifies to:
-$$i\omega m_{1}\gamma_{q} \left( \omega F_{2} - k W_0 \right)$$
-Where we define the cross-forcing variable:
-* $W_{0} = U_{1}F_{2} + V_{2}F_{1}$
+$$
+\begin{aligned}
+-i(1+\beta_1)\omega^3 &+
+\left\{
+\begin{aligned}
+&\left[ m_1\beta_2 - m_2(1+\beta_1) \right]\gamma_q \\
+&+ ik\left[ c_1(1+\beta_2\alpha_{2,1}) + c_2(1+\beta_1) \right]
+\end{aligned}
+\right\} \omega^2 \\
+&+
+\left\{
+\begin{aligned}
+&k \left[ c_1(1+\beta_2\alpha_{2,1}) + c_2(1+\beta_1) \right] m_2\gamma_q \\
+&- kc_1 m_1\beta_2\gamma_q - ik^2 c_1 c_2
+\end{aligned}
+\right\} ω \\
+&- k^2 c_1 c_2 m_2 \gamma_q = 0
+\end{aligned}
+$$
 
 ---
 
-## 5. Final Dispersion Relation $\omega(k)$
+## 5. Case 1: Low-Frequency Approximation ($|\omega^2| ≪ 1$)
 
-Combining all expanded terms, the explicit dispersion relation organizes into a cubic polynomial in terms of angular frequency $\omega$:
+Under the low-frequency limit, we neglect terms of $\omega^2$ and $\omega^3$. The characteristic equation simplifies to a linear equation in $\omega$:
 
-$$\Gamma_{3}\omega^{3} + \Gamma_{2}\omega^{2} + \Gamma_{1}\omega + \Gamma_{0} = 0$$
+$$
+\left\{
+\begin{aligned}
+&k \left[ c_1(1+\beta_2\alpha_{2,1}) + c_2(1+\beta_1) \right] m_2\gamma_q \\
+&- kc_1 m_1\beta_2\gamma_q - ik^2 c_1 c_2
+\end{aligned}
+\right\} ω
+- k^2 c_1 c_2 m_2 \gamma_q = 0
+$$
 
-Where the final $\Gamma$ coefficients governing the system's normal modes are defined entirely by the given parameters and wavenumber $k$:
-* **$\Gamma_{3}$** $= A_{0}$
-* **$\Gamma_{2}$** $= - B_{0}k - i\gamma_{q}(m_{2}A_{0} - m_{1}F_{2})$
-* **$\Gamma_{1}$** $= C_{0}k^{2} + i\gamma_{q}k(m_{2}B_{0} - m_{1}W_{0})$
-* **$\Gamma_{0}$** $= - i\gamma_{q}m_{2}C_{0}k^{2}$
+Let us define the following coefficients:
 
-Solving this cubic equation for a given $k$ will yield the three distinct wave modes $\omega(k)$ of the system.
+* $C_{1r} = k \left[ c_1(1+\beta_2\alpha_{2,1}) + c_2(1+\beta_1) \right] m_2\gamma_q - kc_1 m_1\beta_2\gamma_q$
+* $C_{1i} = -k^2 c_1 c_2$
+* $C_0 = k^2 c_1 c_2 m_2 \gamma_q$
+
+The equation becomes:
+$$(C_{1r} + i C_{1i})\omega - C_0 = 0 ⟹ ω = \frac{C_0}{C_{1r} + i C_{1i}} = \frac{C_0 C_{1r} - i C_0 C_{1i}}{C_{1r}^2 + C_{1i}^2}$$
+
+The growth rate (imaginary part of frequency, where instability corresponds to $-\omega_i > 0$ if defined as $e^{i\omega t}$) is:
+
+$$-\omega_i = \frac{C_0 C_{1i}}{C_{1r}^2 + C_{1i}^2}$$
+
+Substituting back the coefficients and factoring out common terms:
+
+$$
+-\omega_i = \frac{-m_2 \gamma_q}{1 + \frac{m_2^2 \gamma_q^2}{k^2 c_1^2 c_2^2}
+\left\{
+\begin{aligned}
+&\left[c_1(1+\beta_2\alpha_{2,1}) + c_2(1+\beta_1)\right]m_2\gamma_q \\
+&- c_1 m_1 \beta_2 \gamma_q
+\end{aligned}
+\right\}^2
+}
+$$
+
+Expanding and simplifying the algebraic expression inside the denominator brackets yields the final analytical form for the low-frequency growth rate:
+
+$$
+-\omega_i = \frac{-m_2 \gamma_q}{1 + \frac{m_2^2 \gamma_q^2}{k^2 c_1^2 c_2^2}
+\left\{
+\begin{aligned}
+&c_1^2(1+\beta_2\alpha_{2,1})^2 + c_2^2(1+\beta_1)^2 + c_1^2 m_1^2 \beta_2^2 \\
+&+ c_1 c_2 (1+\beta_1)(1+\beta_2\alpha_{2,1}) \\
+&- c_1^2 (1+\beta_2\alpha_{2,1})\beta_2 - c_1 c_2(1+\beta_1)\beta_2
+\end{aligned}
+\right\}
+}
+$$
