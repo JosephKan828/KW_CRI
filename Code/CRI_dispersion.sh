@@ -127,4 +127,6 @@ echo "Sweep and visualization finished successfully. Setup logged to $LOG_FILE."
 echo "Automatically committing and pushing changes to GitHub..."
 
 PROJECT_ROOT="/home/b11209013/KW_CRI"
-bash -ic "gpush \"$PROJECT_ROOT\""
+git -C "$PROJECT_ROOT" add .
+git -C "$PROJECT_ROOT" commit -m "Update dispersion sensitivity sweep" || true
+git -C "$PROJECT_ROOT" push || true
