@@ -44,24 +44,33 @@ TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 GIT_HASH=$(git rev-parse --short HEAD 2>/dev/null || echo "Not a git repository")
 
 # Append formatted run metadata to the markdown log
-echo -e "\n### Experiment Run: $TIMESTAMP" >> "$LOG_FILE"
-echo "- **Description:** $EXPERIMENT_DESC" >> "$LOG_FILE"
-echo "- **Git Commit:** \`$GIT_HASH\`" >> "$LOG_FILE"
-echo "- **Swept Parameters:**" >> "$LOG_FILE"
+echo -e "\n### 🧪 Experiment Run: \`$TIMESTAMP\`" >> "$LOG_FILE"
+echo "| Property | Value |" >> "$LOG_FILE"
+echo "| :--- | :--- |" >> "$LOG_FILE"
+echo "| **Description** | $EXPERIMENT_DESC |" >> "$LOG_FILE"
+echo "| **Mode** | \`$MODE\` |" >> "$LOG_FILE"
+echo "| **Commit** | \`$GIT_HASH\` |" >> "$LOG_FILE"
+echo "" >> "$LOG_FILE"
+echo "<details>" >> "$LOG_FILE"
+echo "<summary><b>View Swept Parameters</b></summary>" >> "$LOG_FILE"
+echo "" >> "$LOG_FILE"
+echo "\`\`\`text" >> "$LOG_FILE"
 
 # Dynamically log whichever parameters are active
-[ -n "$F_LIST" ] && echo "- \`F_LIST\`: $F_LIST" >> "$LOG_FILE"
-[ -n "$f_LIST" ] && echo "- \`f_LIST\`: $f_LIST" >> "$LOG_FILE"
-[ -n "$m1_LIST" ] && echo "- \`m1_LIST\`: $m1_LIST" >> "$LOG_FILE"
-[ -n "$c1_LIST" ] && echo "- \`c1_LIST\`: $c1_LIST" >> "$LOG_FILE"
-[ -n "$c2_LIST" ] && echo "- \`c2_LIST\`: $c2_LIST" >> "$LOG_FILE"
-[ -n "$scaling_factor_LIST" ] && echo "- \`scaling_factor_LIST\`: $scaling_factor_LIST" >> "$LOG_FILE"
-[ -n "$b1_LIST" ] && echo "- \`b1_LIST\`: $b1_LIST" >> "$LOG_FILE"
-[ -n "$m2_LIST" ] && echo "- \`m2_LIST\`: $m2_LIST" >> "$LOG_FILE"
-[ -n "$gamma_q_LIST" ] && echo "- \`gamma_q_LIST\`: $gamma_q_LIST" >> "$LOG_FILE"
+[ -n "$F_LIST" ] && echo "F_LIST = [${F_LIST// /, }]" >> "$LOG_FILE"
+[ -n "$f_LIST" ] && echo "f_LIST = [${f_LIST// /, }]" >> "$LOG_FILE"
+[ -n "$m1_LIST" ] && echo "m1_LIST = [${m1_LIST// /, }]" >> "$LOG_FILE"
+[ -n "$c1_LIST" ] && echo "c1_LIST = [${c1_LIST// /, }]" >> "$LOG_FILE"
+[ -n "$c2_LIST" ] && echo "c2_LIST = [${c2_LIST// /, }]" >> "$LOG_FILE"
+[ -n "$scaling_factor_LIST" ] && echo "scaling_factor_LIST = [${scaling_factor_LIST// /, }]" >> "$LOG_FILE"
+[ -n "$b1_LIST" ] && echo "b1_LIST = [${b1_LIST// /, }]" >> "$LOG_FILE"
+[ -n "$m2_LIST" ] && echo "m2_LIST = [${m2_LIST// /, }]" >> "$LOG_FILE"
+[ -n "$gamma_q_LIST" ] && echo "gamma_q_LIST = [${gamma_q_LIST// /, }]" >> "$LOG_FILE"
 
-echo "****" >> "$LOG_FILE"
+echo "\`\`\`" >> "$LOG_FILE"
+echo "</details>" >> "$LOG_FILE"
 echo "" >> "$LOG_FILE"
+echo "---" >> "$LOG_FILE"
 
 # ====================================================================
 # EXECUTE SCRIPT

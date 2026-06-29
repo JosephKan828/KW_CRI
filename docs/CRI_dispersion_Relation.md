@@ -44,7 +44,7 @@ $$
 \exp(i\omega t - ikx) = \exp(i\omega_r t - ikx)\exp(-\omega_i t)
 $$
 
-Therefore, **instability** corresponds to a positive growth rate: $-\omega_i > 0$. 
+Therefore, **instability** corresponds to a positive growth rate: $-\omega_i > 0$.
 The phase relation is $\omega_r t - kx = \text{constant}$, which yields the phase speed:
 
 $$
