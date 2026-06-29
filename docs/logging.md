@@ -1958,3 +1958,20 @@ scaling_factor_LIST = [0.000, 0.100, 0.200, 0.300, 0.400, 0.500, 0.600, 0.700, 0
 </details>
 
 ---
+
+### 🧪 Experiment Run: `2026-06-29 16:40:41`
+| Property | Value |
+| :--- | :--- |
+| **Description** | b1 sensitivity |
+| **Mode** | `simplified` |
+| **Commit** | `aca9ebd` |
+
+<details>
+<summary><b>View Swept Parameters</b></summary>
+
+```text
+b1_LIST = [0.000, 0.200, 0.400, 0.600, 0.800, 1.000, 1.200, 1.400, 1.600, 1.800, 2.000, 2.200, 2.400, 2.600, 2.800, 3.000, 3.200, 3.400, 3.600, 3.800, 4.000]
+```
+</details>
+
+---

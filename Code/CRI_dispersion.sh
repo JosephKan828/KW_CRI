@@ -20,8 +20,8 @@ MODE=${2:-"full"}
 # m1_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
 # c1_LIST=$(seq -f "%.3f" -s " " 0.8 0.02 1.2)
 # c2_LIST=$(seq -f "%.3f" -s " " 0.4 0.01 0.6)
-scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
-# b1_LIST=$(seq -f "%.3f" -s " " 0.0 0.2 4.0)
+# scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
+b1_LIST=$(seq -f "%.3f" -s " " 0.0 0.2 4.0)
 # m2_LIST=$(seq -f "%.3f" -s " " -2.0 0.2 2.0)
 # gamma_q_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
 
