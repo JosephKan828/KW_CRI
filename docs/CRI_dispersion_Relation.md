@@ -11,27 +11,47 @@ Assuming the following parameter simplifications:
 
 The linearized system of governing equations is given by:
 
-$$\frac{\partial T_1}{\partial t} + c_1 \frac{\partial T_1}{\partial x} = J_1$$
-
-$$\frac{\partial T_2}{\partial t} + c_2 \frac{\partial T_2}{\partial x} = J_2 + \alpha_{2,1} c_1 \frac{\partial T_1}{\partial x}$$
-
-$$\frac{\partial q}{\partial t} = m_1 J_1 + m_2 J_2$$
+$$
+\begin{aligned}
+\frac{\partial T_1}{\partial t} + c_1 \frac{\partial T_1}{\partial x} &= J_1 \\
+\frac{\partial T_2}{\partial t} + c_2 \frac{\partial T_2}{\partial x} &= J_2 + \alpha_{2,1} c_1 \frac{\partial T_1}{\partial x} \\
+\frac{\partial q}{\partial t} &= m_1 J_1 + m_2 J_2
+\end{aligned}
+$$
 
 Where the moisture/heating source functions are parameterized as:
 
-$$J_1 = -\frac{E}{b_1} \frac{\partial}{\partial t}\left[f T_1 + (1-f) T_2\right]$$
-
-$$J_2 = -\gamma_q q$$
+$$
+\begin{aligned}
+J_1 &= -\frac{E}{b_1} \frac{\partial}{\partial t}\left[f T_1 + (1-f) T_2\right] \\
+J_2 &= -\gamma_q q
+\end{aligned}
+$$
 
 ---
 
 ## 2. Normal Mode Ansatz & Fourier Transformation
 
-We substitute the plane-wave solutions of the form:
+We substitute plane-wave solutions of the form:
 
-$$\begin{pmatrix} T_1 \\ T_2 \\ q \end{pmatrix} = \sum_{\omega, k} \begin{pmatrix} \hat{T}_1 \\ \hat{T}_2 \\ \hat{q} \end{pmatrix} \exp(i\omega t - ikx)$$
+$$
+\begin{pmatrix} T_1 \\ T_2 \\ q \end{pmatrix} = \sum_{\omega, k} \begin{pmatrix} \hat{T}_1 \\ \hat{T}_2 \\ \hat{q} \end{pmatrix} \exp(i\omega t - ikx)
+$$
 
-Substituting these forms transforms the spatial and temporal derivatives into algebraic terms ($\partial_t → i\omega$, $\partial_x → -ik$):
+where the complex frequency is given by $\omega = \omega_r + i\omega_i$. With this convention:
+
+$$
+\exp(i\omega t - ikx) = \exp(i\omega_r t - ikx)\exp(-\omega_i t)
+$$
+
+Therefore, **instability** corresponds to a positive growth rate: $-\omega_i > 0$. 
+The phase relation is $\omega_r t - kx = \text{constant}$, which yields the phase speed:
+
+$$
+c_p = \frac{\omega_r}{k}
+$$
+
+Substituting these forms transforms the spatial and temporal derivatives into algebraic terms ($\partial_t \to i\omega$, $\partial_x \to -ik$):
 
 $$
 \begin{aligned}
@@ -115,9 +135,9 @@ $$
 
 ---
 
-## 5. Case 1: Low-Frequency Approximation ($|\omega^2| \ll 1$)
+## 5. Low-Frequency Approximation ($|\omega^2| \ll 1$)
 
-Under the low-frequency limit, we neglect terms of $\omega^2$ and $\omega^3$. The characteristic equation simplifies to a linear equation in $\omega$:
+Under the low-frequency limit, we neglect terms of $\omega^3$ and $\omega^2$. The characteristic equation simplifies to a linear equation in $\omega$:
 
 $$
 \left\{
@@ -129,72 +149,122 @@ $$
 - k^2 c_1 c_2 m_2 \gamma_q = 0
 $$
 
-Let us define the following coefficients:
+To simplify the mathematical derivations, we define a compact substitution parameter $A$:
 
-* $C_{1r} = k \left[ c_1(1+\beta_2\alpha_{2,1}) + c_2(1+\beta_1) \right] m_2\gamma_q - kc_1 m_1\beta_2\gamma_q$
+$$
+A = \left[c_1(1+\beta_2\alpha_{2,1})+c_2(1+\beta_1)\right]m_2 - c_1m_1\beta_2
+$$
+
+We also define the following complex coefficients:
+
+* $C_{1r} = k \gamma_q A$
 * $C_{1i} = -k^2 c_1 c_2$
 * $C_0 = k^2 c_1 c_2 m_2 \gamma_q$
 
-The equation becomes:
-$$(C_{1r} + i C_{1i})\omega - C_0 = 0 \implies \omega = \frac{C_0}{C_{1r} + i C_{1i}} = \frac{C_0 C_{1r} - i C_0 C_{1i}}{C_{1r}^2 + C_{1i}^2}$$
-
-### Instability
-
-The growth rate (imaginary part of frequency, where instability corresponds to $-\omega_i > 0$ if defined as $e^{i\omega t}$) is:
-
-$$-\omega_i = \frac{C_0 C_{1i}}{C_{1r}^2 + C_{1i}^2}$$
-
-Substituting back the coefficients and factoring out common terms:
+The low-frequency equation can then be written compactly as:
 
 $$
--\omega_i = \frac{-m_2 \gamma_q}{1 + \frac{\gamma_q^2}{k^2 c_1^2 c_2^2}
-\left\{
+(C_{1r} + i C_{1i})\omega - C_0 = 0 \implies \omega = \frac{C_0}{C_{1r} + i C_{1i}}
+$$
+
+Separating the real and imaginary parts of $\omega$ by multiplying by the complex conjugate gives:
+
+$$
+\omega = \frac{C_0(C_{1r} - i C_{1i})}{C_{1r}^2 + C_{1i}^2} = \underbrace{\frac{C_0 C_{1r}}{C_{1r}^2 + C_{1i}^2}}_{\omega_r} + i \underbrace{\left( -\frac{C_0 C_{1i}}{C_{1r}^2 + C_{1i}^2} \right)}_{\omega_i}
+$$
+
+### 5.1 Instability (Growth Rate)
+
+The growth rate is given by $-\omega_i$:
+
+$$
+-\omega_i = \frac{C_0 C_{1i}}{C_{1r}^2 + C_{1i}^2}
+$$
+
+Substituting the definitions of $C_0$, $C_{1r}$, and $C_{1i}$, we divide the numerator and denominator by $k^4 c_1^2 c_2^2$ to obtain the normalized form:
+
+$$
+-\omega_i = \frac{-m_2\gamma_q}{1+\frac{\gamma_q^2}{k^2c_1^2c_2^2}A^2}
+$$
+
+Where the expanded form of $A^2$ is:
+
+$$
 \begin{aligned}
-&\left[c_1(1+\beta_2\alpha_{2,1}) + c_2(1+\beta_1)\right]m_2 \\
-&- c_1 m_1 \beta_2
+A^2 =& \ c_1^2(1+\beta_2\alpha_{2,1})^2m_2^2 + c_2^2(1+\beta_1)^2m_2^2 + c_1^2m_1^2\beta_2^2 \\
+&+ 2c_1c_2(1+\beta_1)(1+\beta_2\alpha_{2,1})m_2^2 \\
+&- 2c_1^2(1+\beta_2\alpha_{2,1})\beta_2m_1m_2 - 2c_1c_2(1+\beta_1)\beta_2m_1m_2
 \end{aligned}
-\right\}^2
-}
 $$
 
-Expanding and simplifying the algebraic expression inside the denominator brackets yields the final analytical form for the low-frequency growth rate:
+### 5.2 Phase Speed
+
+The real frequency is $\omega_r = \frac{C_0 C_{1r}}{C_{1r}^2 + C_{1i}^2}$. Therefore, the phase speed is $c_p = \frac{\omega_r}{k}$:
 
 $$
--\omega_i = \frac{-m_2 \gamma_q}{1 + \frac{ \gamma_q^2}{k^2 c_1^2 c_2^2}
-\left\{
-\begin{aligned}
-&c_1^2(1+\beta_2\alpha_{2,1})^2 m_2^2 + c_2^2(1+\beta_1)^2 m_2^2 + c_1^2 m_1^2 \beta_2^2 \\
-&+ 2c_1 c_2 (1+\beta_1)(1+\beta_2\alpha_{2,1})m_2^2 \\
-&- 2c_1^2 (1+\beta_2\alpha_{2,1})\beta_2m_1 m_2 - 2c_1 c_2(1+\beta_1)\beta_2 m_1 m_2
-\end{aligned}
-\right\}
-}
+c_p = \frac{1}{k} \frac{(k^2 c_1 c_2 m_2 \gamma_q)(k \gamma_q A)}{(k \gamma_q A)^2 + (-k^2 c_1 c_2)^2} = \frac{c_1 c_2 m_2 \gamma_q^2 A}{\gamma_q^2 A^2 + k^2 c_1^2 c_2^2}
 $$
 
-### Phase Speed
-
-The phase speed is formulated as $c=\frac{1}{k} \left[ \frac{C_0 C_{1r}}{C_{1r}^2 + C_{1i}^2} \right]$:
+Normalizing by dividing the numerator and denominator by $k^2 c_1^2 c_2^2$ yields:
 
 $$
-c = \frac{\frac{\gamma_q^2 m_2}{k^2 c_1 c_2}
-\left\{
-\begin{aligned}
-&\left[c_1(1+\beta_2\alpha_{2,1}) + c_2(1+\beta_1)\right]m_2 \\
-&- c_1 m_1 \beta_2
-\end{aligned}
-\right\}
-}{
-1 + \frac{\gamma_q^2}{k^2 c_1^2 c_2^2}
-\left\{
-\begin{aligned}
-&c_1^2(1+\beta_2\alpha_{2,1})^2 m_2^2 + c_2^2(1+\beta_1)^2 m_2^2 + c_1^2 m_1^2 \beta_2^2 \\
-&+ 2c_1 c_2 (1+\beta_1)(1+\beta_2\alpha_{2,1})m_2^2 \\
-&- 2c_1^2 (1+\beta_2\alpha_{2,1})\beta_2m_1 m_2 - 2c_1 c_2(1+\beta_1)\beta_2 m_1 m_2
-\end{aligned}
-\right\}
-}
+c_p = \frac{ \frac{\gamma_q^2 m_2}{k^2 c_1 c_2} A }{ 1 + \frac{\gamma_q^2}{k^2 c_1^2 c_2^2} A^2 }
 $$
 
-Considering the shortwave limit, the instability is approached to $-m_2 \gamma_q$, which is close to 0.7 day$^{-1}$, consistent with the figure below.
+---
+
+## 6. Shortwave Limit ($k \to \infty$)
+
+Consider the shortwave, or high-wavenumber, limit ($k \to \infty$). As $k$ grows large, the terms divided by $k^2$ approach zero:
+
+$$
+\frac{\gamma_q^2}{k^2c_1^2c_2^2}A^2 \to 0
+$$
+
+### 6.1 Limit of Instability
+
+Evaluating the instability in this limit:
+
+$$
+-\omega_i \to -m_2\gamma_q
+$$
+
+This indicates that in the shortwave limit, the instability approaches a constant $-m_2 \gamma_q \approx 0.7 \text{ day}^{-1}$, which is fully consistent with the corresponding figure below.
+
+### 6.2 Limit of Phase Speed
+
+From the unnormalized phase speed equation, the denominator becomes dominated by the $k^2$ term ($\gamma_q^2 A^2 + k^2 c_1^2 c_2^2 \sim k^2 c_1^2 c_2^2$):
+
+$$
+c_p \sim \frac{c_1 c_2 m_2 \gamma_q^2 A}{k^2 c_1^2 c_2^2} = \frac{m_2 \gamma_q^2 A}{k^2 c_1 c_2}
+$$
+
+Thus, the phase speed decays quadratically with wavenumber:
+
+$$
+c_p = \mathcal{O}(k^{-2}) \implies \lim_{k \to \infty} c_p = 0
+$$
+
+Equivalently, $k^2 c_p \to \frac{m_2 \gamma_q^2 A}{c_1 c_2}$.
+
+---
+
+## 7. Interpretation
+
+The phase speed derived here belongs to the same low-frequency branch obtained after neglecting the $\omega^3$ and $\omega^2$ terms. Therefore, the asymptotic results should be interpreted as the shortwave behavior of this reduced low-frequency branch.
+
+Assuming $c_1 c_2 \gamma_q^2 > 0$, the formula shows that the sign of the phase speed is controlled entirely by the sign of:
+
+$$
+m_2 A
+$$
+
+Therefore, modifying the CRI coupling parameter $\alpha_{2,1}$ affects the phase speed directly through the term $c_1 \beta_2 \alpha_{2,1} m_2$ nested within $A$:
+
+$$
+A = \left[c_1(1+\beta_2\alpha_{2,1})+c_2(1+\beta_1)\right]m_2 - c_1m_1\beta_2
+$$
+
+---
 
 ![diagram](../Figure/f_sensitivity_simplified/single/f=0.5.png)
