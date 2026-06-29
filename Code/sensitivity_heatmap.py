@@ -64,7 +64,7 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
         ax[0, i].set_xlabel("")
         
         if i == 0:
-            ax[0, i].set_ylabel(param_name, fontsize=14, fontweight="bold")
+            ax[0, i].set_ylabel("Instability", fontsize=14, fontweight="bold")
             ax[0, i].set_yticklabels([f"{float(t.get_text()):.2f}" for t in ax[0, i].get_yticklabels()])
         else:
             ax[0, i].set_ylabel("")
@@ -80,7 +80,7 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
             ax=ax[1, i],
             annot=True,
             fmt=".2f", 
-            cmap="RdBu_r",
+            cmap="BrBG",
             vmin=-15.0, vmax=45.0, center=0.0,
             cbar=(i == 2),
             xticklabels=True,
@@ -100,7 +100,7 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
         ax[1, i].set_xticklabels([f"{float(t.get_text()):.1f}" for t in ax[1, i].get_xticklabels()])
         
         if i == 0:
-            ax[1, i].set_ylabel(param_name, fontsize=14, fontweight="bold")
+            ax[1, i].set_ylabel("Phase Speed", fontsize=14, fontweight="bold")
             ax[1, i].set_yticklabels([f"{float(t.get_text()):.2f}" for t in ax[1, i].get_yticklabels()])
         else:
             ax[1, i].set_ylabel("")

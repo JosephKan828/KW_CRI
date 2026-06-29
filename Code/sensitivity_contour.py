@@ -46,7 +46,7 @@ def plot_combined_contours(ds_sel, param_name, title, output_path):
             x='k', y=param_name,
             levels=np.linspace(-2, 2, 21),
             cmap="RdBu_r",
-            norm=TwoSlopeNorm(vcenter=0),
+            norm=TwoSlopeNorm(vmin=-2, vcenter=0, vmax=2),
             extend="both",
             add_colorbar=False
         )
@@ -67,7 +67,7 @@ def plot_combined_contours(ds_sel, param_name, title, output_path):
         ax[0, i].set_xlabel("")
         
         if i == 0:
-            ax[0, i].set_ylabel(param_name, fontsize=14, fontweight="bold")
+            ax[0, i].set_ylabel("Instability", fontsize=14, fontweight="bold")
         else:
             ax[0, i].set_ylabel("")
             ax[0, i].set_yticklabels([])
@@ -83,8 +83,8 @@ def plot_combined_contours(ds_sel, param_name, title, output_path):
             ax=ax[1, i],
             x='k', y=param_name,
             levels=np.linspace(-10, 50, 21),
-            cmap="RdBu_r",
-            norm=TwoSlopeNorm(vcenter=0),
+            cmap="BrBG",
+            norm=TwoSlopeNorm(vmin=-10, vcenter=0, vmax=50),
             extend="both",
             add_colorbar=False
         )
@@ -105,7 +105,7 @@ def plot_combined_contours(ds_sel, param_name, title, output_path):
         ax[1, i].set_title("")
 
         if i == 0:
-            ax[1, i].set_ylabel(param_name, fontsize=14, fontweight="bold")
+            ax[1, i].set_ylabel("Phase Speed", fontsize=14, fontweight="bold")
         else:
             ax[1, i].set_ylabel("")
             ax[1, i].set_yticklabels([])
