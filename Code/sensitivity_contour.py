@@ -9,93 +9,114 @@ import numpy as np
 import xarray as xr
 from pathlib import Path
 from matplotlib import pyplot as plt
+import matplotlib.ticker as ticker
 
 def plot_combined_contours(ds_sel, param_name, title, output_path):
     """
     Generate and save a (2, 3) contour plot for instability and phase speed.
     ds_sel must be a 2D Dataset with dimensions ('k', param_name) and mode coordinate.
+    Automatically handles NaNs and aligns dimensions via Xarray native plotting.
     """
     plt.rcParams.update({
         "font.family": "serif", 
         "mathtext.fontset": "cm",
-        "axes.labelsize": 13,
-        "axes.titlesize": 14,
-        "legend.fontsize": 11,
-        "xtick.labelsize": 11,
-        "ytick.labelsize": 11
+        "axes.labelsize": 14,
+        "axes.titlesize": 15,
+        "legend.fontsize": 12,
+        "xtick.labelsize": 12,
+        "ytick.labelsize": 12,
+        "xtick.direction": "in",
+        "ytick.direction": "in",
+        "xtick.top": True,
+        "ytick.right": True,
+        "axes.linewidth": 1.2
     })
     
-    fig, ax = plt.subplots(2, 3, figsize=(18, 7), dpi=150)
+    fig, ax = plt.subplots(2, 3, figsize=(18, 7.5), dpi=150)
     mode_titles = ["Moisture Mode", "Convectively Coupled Wave", "Fast Gravity Wave"]
     
-    k_plot = ds_sel['k'].values
-    y_plot = ds_sel[param_name].values
-    X, Y = np.meshgrid(k_plot, y_plot)
-    
-    # Extract data as numpy arrays for contouring, transpose to match meshgrid (param, k)
-    instab_data = ds_sel['instab'].transpose(param_name, 'k', 'mode').values
-    pspeed_data = ds_sel['pspeed'].transpose(param_name, 'k', 'mode').values
-    
     for i in range(3):
+        # Extract robust dimension-aligned DataArrays for the specific mode
+        da_instab = ds_sel['instab'].isel(mode=i)
+        da_pspeed = ds_sel['pspeed'].isel(mode=i)
+        
         # --- Top Row: Instability ---
-        cf_instab = ax[0, i].contourf(
-            X, Y, instab_data[..., i],
+        cf_instab = da_instab.plot.contourf(
+            ax=ax[0, i],
+            x='k', y=param_name,
             levels=np.linspace(-2, 2, 21),
             cmap="RdBu_r",
             norm=TwoSlopeNorm(vcenter=0),
-            extend="both"
+            extend="both",
+            add_colorbar=False
         )
         
-        c_instab_lines = ax[0, i].contour(
-            X, Y, instab_data[..., i],
+        c_instab_lines = da_instab.plot.contour(
+            ax=ax[0, i],
+            x='k', y=param_name,
             levels=np.arange(-2.0, 2.1, 0.25),
             colors="k",
-            linewidths=2,
-            alpha=0.6
+            linewidths=1.2,
+            alpha=0.6,
+            add_colorbar=False
         )
-        ax[0, i].clabel(c_instab_lines, inline=True, fontsize=10)
-        ax[0, i].set_title(mode_titles[i] if i < len(mode_titles) else f"Mode {i}", fontsize=14, fontweight="bold")
+        ax[0, i].clabel(c_instab_lines, inline=True, fontsize=10, fmt="%.2f")
+        ax[0, i].set_title(mode_titles[i] if i < len(mode_titles) else f"Mode {i}", fontsize=15, fontweight="bold")
+        
+        ax[0, i].minorticks_on()
+        ax[0, i].set_xlabel("")
         
         if i == 0:
             ax[0, i].set_ylabel(param_name, fontsize=14, fontweight="bold")
         else:
-            ax[0, i].set_yticks([])
+            ax[0, i].set_ylabel("")
+            ax[0, i].set_yticklabels([])
             
         if i == 2:
-            cbar = fig.colorbar(cf_instab, ax=ax[0, i], orientation="vertical", shrink=0.8, aspect=40)
+            cbar = fig.colorbar(cf_instab, ax=ax[0, i], orientation="vertical", shrink=0.85, aspect=30, pad=0.04)
             cbar.set_ticks([-2, -1, 0, 1, 2])
-            cbar.set_label(r"Growth Rate ($\mathrm{day^{-1}}$)", fontsize=12)
+            cbar.set_label(r"Growth Rate ($\mathrm{day^{-1}}$)", fontsize=13)
+            cbar.ax.tick_params(direction="in")
 
         # --- Bottom Row: Phase Speed ---
-        cf_pspeed = ax[1, i].contourf(
-            X, Y, pspeed_data[..., i],
+        cf_pspeed = da_pspeed.plot.contourf(
+            ax=ax[1, i],
+            x='k', y=param_name,
             levels=np.linspace(-10, 50, 21),
             cmap="RdBu_r",
             norm=TwoSlopeNorm(vcenter=0),
-            extend="both"
+            extend="both",
+            add_colorbar=False
         )
         
-        c_pspeed_lines = ax[1, i].contour(
-            X, Y, pspeed_data[..., i],
+        c_pspeed_lines = da_pspeed.plot.contour(
+            ax=ax[1, i],
+            x='k', y=param_name,
             levels=np.arange(-10, 51, 5),
             colors="k",
-            linewidths=2,
-            alpha=0.6
+            linewidths=1.2,
+            alpha=0.6,
+            add_colorbar=False
         )
-        ax[1, i].clabel(c_pspeed_lines, inline=True, fontsize=10)
+        ax[1, i].clabel(c_pspeed_lines, inline=True, fontsize=10, fmt="%d")
+        
+        ax[1, i].minorticks_on()
         ax[1, i].set_xlabel(r"Non-dimensional Wavenumber $k$", fontsize=14)
+        ax[1, i].set_title("")
 
         if i == 0:
             ax[1, i].set_ylabel(param_name, fontsize=14, fontweight="bold")
         else:
-            ax[1, i].set_yticks([])
+            ax[1, i].set_ylabel("")
+            ax[1, i].set_yticklabels([])
 
         if i == 2:
-            cbar = fig.colorbar(cf_pspeed, ax=ax[1, i], orientation="vertical", shrink=0.8, aspect=40)
+            cbar = fig.colorbar(cf_pspeed, ax=ax[1, i], orientation="vertical", shrink=0.85, aspect=30, pad=0.04)
             cbar.set_ticks([-10, 0, 10, 20, 30, 40, 50])
-            cbar.set_label(r"Phase Speed ($\mathrm{m~s^{-1}}$)", fontsize=12)
+            cbar.set_label(r"Phase Speed ($\mathrm{m~s^{-1}}$)", fontsize=13)
+            cbar.ax.tick_params(direction="in")
 
-    fig.suptitle(title, x=0.5, y=1.02, fontsize=16, fontweight="bold")
+    fig.suptitle(title, x=0.5, y=1.02, fontsize=17, fontweight="bold")
     plt.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
@@ -158,7 +179,8 @@ def main():
     if sel_dict:
         ds_sel = ds_sel.sel(**sel_dict)
         
-    ds_sel = ds_sel.squeeze()
+    # Squeeze out degenerate dimensions and compute robustly with dask integration
+    ds_sel = ds_sel.squeeze().compute()
     
     title = f"Dispersion Relation Sensitivity: {target_param}"
     if sel_dict:
@@ -167,9 +189,9 @@ def main():
     output_path = fig_dir / f"sensitivity_contour.png"
     print(f"Generating Combined Contour Plot for {target_param}...")
     
-    # Evaluate lazily loaded data and plot
-    plot_combined_contours(ds_sel.compute(), target_param, title, output_path)
+    plot_combined_contours(ds_sel, target_param, title, output_path)
     print(f"Done! Figure saved to {output_path}")
 
 if __name__ == "__main__":
     main()
+

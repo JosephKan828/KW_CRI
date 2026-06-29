@@ -5,108 +5,96 @@ root="/home/b11209013/KW_CRI"
 # ====================================================================
 # SENSITIVITY SWEEP TARGETING VARIABLES
 # ====================================================================
-# Optional: Add a description when running the script 
-# e.g., ./CRI_dispersion_mode.sh "Testing moisture sensitivity" "simplified"
+# e.g., ./CRI_dispersion.sh "Testing moisture sensitivity" "full" "all"
 EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
 MODE=${2:-"full"}
+TARGET=${3:-"all"}
 
-# ====================================================================
 # Parameter setup
-# ====================================================================
+VARIABLES=("f" "m1" "scaling_factor" "b1" "m2" "gamma_q")
 
-# Dense grid configurations (~100 samples) across the same boundaries:
-# F_LIST=$(seq -f "%.3f" -s " " 3.0 0.02 5.0)
-# f_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
-# m1_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
-# c1_LIST=$(seq -f "%.3f" -s " " 0.8 0.02 1.2)
-# c2_LIST=$(seq -f "%.3f" -s " " 0.4 0.01 0.6)
-# scaling_factor_LIST=$(seq -f "%.3f" -s " " 0.0 0.1 2.0)
-# b1_LIST=$(seq -f "%.3f" -s " " 0.0 0.2 4.0)
-# m2_LIST=$(seq -f "%.3f" -s " " -2.0 0.2 2.0)
-gamma_q_LIST=$(seq -f "%.3f" -s " " 0.0 0.05 1.0)
+get_sequence() {
+    case $1 in
+        # F) echo $(seq -f "%.3f" -s " " 3.0 0.02 5.0) ;;
+        f) echo $(seq -f "%.3f" -s " " 0.0 0.05 1.0) ;;
+        m1) echo $(seq -f "%.3f" -s " " 0.0 0.1 2.0) ;;
+        # c1) echo $(seq -f "%.3f" -s " " 0.8 0.02 1.2) ;;
+        # c2) echo $(seq -f "%.3f" -s " " 0.4 0.01 0.6) ;;
+        scaling_factor) echo $(seq -f "%.3f" -s " " 0.0 0.1 2.0) ;;
+        b1) echo $(seq -f "%.3f" -s " " 0.0 0.2 4.0) ;;
+        m2) echo $(seq -f "%.3f" -s " " -2.0 0.2 2.0) ;;
+        gamma_q) echo $(seq -f "%.3f" -s " " 0.0 0.05 1.0) ;;
+        *) echo "" ;;
+    esac
+}
 
 # ====================================================================
 # LOGGING SETUP
 # ====================================================================
-LOG_FILE="/home/b11209013/KW_CRI/docs/logging.md"
-TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
-GIT_HASH=$(git rev-parse --short HEAD 2>/dev/null || echo "Not a git repository")
+LOG_FILE="$root/docs/logging.md"
+GIT_HASH=$(git -C "$root" rev-parse --short HEAD 2>/dev/null || echo "Not a git repository")
 
-# Append formatted run metadata to the markdown log
-echo -e "\n### 🧪 Experiment Run: \`$TIMESTAMP\`" >> "$LOG_FILE"
-echo "| Property | Value |" >> "$LOG_FILE"
-echo "| :--- | :--- |" >> "$LOG_FILE"
-echo "| **Description** | $EXPERIMENT_DESC |" >> "$LOG_FILE"
-echo "| **Mode** | \`$MODE\` |" >> "$LOG_FILE"
-echo "| **Commit** | \`$GIT_HASH\` |" >> "$LOG_FILE"
-echo "" >> "$LOG_FILE"
-echo "<details>" >> "$LOG_FILE"
-echo "<summary><b>View Swept Parameters</b></summary>" >> "$LOG_FILE"
-echo "" >> "$LOG_FILE"
-echo "\`\`\`text" >> "$LOG_FILE"
+run_sweep() {
+    local VAR_NAME=$1
+    local VAR_LIST=$(get_sequence "$VAR_NAME")
+    
+    if [ -z "$VAR_LIST" ]; then
+        echo "Error: Unknown parameter target $VAR_NAME"
+        return
+    fi
 
-# Dynamically log whichever parameters are active
-[ -n "$F_LIST" ] && echo "F_LIST = [${F_LIST// /, }]" >> "$LOG_FILE"
-[ -n "$f_LIST" ] && echo "f_LIST = [${f_LIST// /, }]" >> "$LOG_FILE"
-[ -n "$m1_LIST" ] && echo "m1_LIST = [${m1_LIST// /, }]" >> "$LOG_FILE"
-[ -n "$c1_LIST" ] && echo "c1_LIST = [${c1_LIST// /, }]" >> "$LOG_FILE"
-[ -n "$c2_LIST" ] && echo "c2_LIST = [${c2_LIST// /, }]" >> "$LOG_FILE"
-[ -n "$scaling_factor_LIST" ] && echo "scaling_factor_LIST = [${scaling_factor_LIST// /, }]" >> "$LOG_FILE"
-[ -n "$b1_LIST" ] && echo "b1_LIST = [${b1_LIST// /, }]" >> "$LOG_FILE"
-[ -n "$m2_LIST" ] && echo "m2_LIST = [${m2_LIST// /, }]" >> "$LOG_FILE"
-[ -n "$gamma_q_LIST" ] && echo "gamma_q_LIST = [${gamma_q_LIST// /, }]" >> "$LOG_FILE"
+    echo "======================================================================"
+    echo "Executing sweep for: $VAR_NAME"
+    echo "======================================================================"
 
-echo "\`\`\`" >> "$LOG_FILE"
-echo "</details>" >> "$LOG_FILE"
-echo "" >> "$LOG_FILE"
-echo "---" >> "$LOG_FILE"
+    local TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+    # Append formatted run metadata to the markdown log
+    echo -e "\n### 🧪 Experiment Run: \`$TIMESTAMP\`" >> "$LOG_FILE"
+    echo "| Property | Value |" >> "$LOG_FILE"
+    echo "| :--- | :--- |" >> "$LOG_FILE"
+    echo "| **Description** | $EXPERIMENT_DESC (Target: $VAR_NAME) |" >> "$LOG_FILE"
+    echo "| **Mode** | \`$MODE\` |" >> "$LOG_FILE"
+    echo "| **Commit** | \`$GIT_HASH\` |" >> "$LOG_FILE"
+    echo "" >> "$LOG_FILE"
+    echo "<details>" >> "$LOG_FILE"
+    echo "<summary><b>View Swept Parameters</b></summary>" >> "$LOG_FILE"
+    echo "" >> "$LOG_FILE"
+    echo "\`\`\`text" >> "$LOG_FILE"
+    echo "${VAR_NAME}_LIST = [${VAR_LIST// /, }]" >> "$LOG_FILE"
+    echo "\`\`\`" >> "$LOG_FILE"
+    echo "</details>" >> "$LOG_FILE"
+    echo "" >> "$LOG_FILE"
+    echo "---" >> "$LOG_FILE"
+
+    echo "Starting dispersion sensitivity sweep ($EXPERIMENT_DESC) with mode $MODE..."
+
+    python3 "$root/Code/CRI_dispersion.py" \
+        --mode "$MODE" \
+        --$VAR_NAME $VAR_LIST
+
+    echo "Generating contours..."
+    python3 "$root/Code/sensitivity_contour.py" \
+        --mode "$MODE" \
+        --$VAR_NAME $VAR_LIST
+
+    echo "Generating heatmaps (5-grid subset)..."
+    python3 "$root/Code/sensitivity_heatmap.py" \
+        --mode "$MODE" \
+        --$VAR_NAME $VAR_LIST
+}
 
 # ====================================================================
 # EXECUTE SCRIPT
 # ====================================================================
-echo "Starting dispersion sensitivity sweep ($EXPERIMENT_DESC) with mode $MODE..."
-
-# Using bash parameter expansion ${VAR:+...} to only include the flag 
-# if the variable is defined and not empty. 
-python3 $root/Code/CRI_dispersion.py \
-    --mode $MODE \
-    ${F_LIST:+--F $F_LIST} \
-    ${f_LIST:+--f $f_LIST} \
-    ${m1_LIST:+--m1 $m1_LIST} \
-    ${c1_LIST:+--c1 $c1_LIST} \
-    ${c2_LIST:+--c2 $c2_LIST} \
-    ${scaling_factor_LIST:+--scaling_factor $scaling_factor_LIST} \
-    ${b1_LIST:+--b1 $b1_LIST} \
-    ${m2_LIST:+--m2 $m2_LIST} \
-    ${gamma_q_LIST:+--gamma_q $gamma_q_LIST}
-
-echo "Generating contours..."
-
-python3 $root/Code/sensitivity_contour.py \
-    --mode $MODE \
-    ${F_LIST:+--F $F_LIST} \
-    ${f_LIST:+--f $f_LIST} \
-    ${m1_LIST:+--m1 $m1_LIST} \
-    ${c1_LIST:+--c1 $c1_LIST} \
-    ${c2_LIST:+--c2 $c2_LIST} \
-    ${scaling_factor_LIST:+--scaling_factor $scaling_factor_LIST} \
-    ${b1_LIST:+--b1 $b1_LIST} \
-    ${m2_LIST:+--m2 $m2_LIST} \
-    ${gamma_q_LIST:+--gamma_q $gamma_q_LIST}
-
-echo "Generating heatmaps (5-grid subset)..."
-
-python3 $root/Code/sensitivity_heatmap.py \
-    --mode $MODE \
-    ${F_LIST:+--F $F_LIST} \
-    ${f_LIST:+--f $f_LIST} \
-    ${m1_LIST:+--m1 $m1_LIST} \
-    ${c1_LIST:+--c1 $c1_LIST} \
-    ${c2_LIST:+--c2 $c2_LIST} \
-    ${scaling_factor_LIST:+--scaling_factor $scaling_factor_LIST} \
-    ${b1_LIST:+--b1 $b1_LIST} \
-    ${m2_LIST:+--m2 $m2_LIST} \
-    ${gamma_q_LIST:+--gamma_q $gamma_q_LIST}
+if [ "$TARGET" == "all" ]; then
+    echo "Running all experiments continuously..."
+    for VAR in "${VARIABLES[@]}"; do
+        run_sweep "$VAR"
+    done
+else
+    run_sweep "$TARGET"
+fi
 
 echo "Sweep and visualization finished successfully. Setup logged to $LOG_FILE."
 
@@ -115,7 +103,6 @@ echo "Sweep and visualization finished successfully. Setup logged to $LOG_FILE."
 # ====================================================================
 echo "Automatically committing and pushing changes to GitHub..."
 
-PROJECT_ROOT="/home/b11209013/KW_CRI"
-git -C "$PROJECT_ROOT" add .
-git -C "$PROJECT_ROOT" commit -m "Update dispersion sensitivity sweep" || true
-git -C "$PROJECT_ROOT" push || true
+git -C "$root" add .
+git -C "$root" commit -m "Update dispersion sensitivity sweep ($EXPERIMENT_DESC)" || true
+git -C "$root" push || true

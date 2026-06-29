@@ -14,67 +14,103 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
     """
     Generate and save a (2, 3) heatmap for instability and phase speed.
     ds_sel must be a 2D Dataset with dimensions ('k', param_name) and mode coordinate.
+    Automatically handles dimensional alignment via transposing and NaN masking natively.
     """
     plt.rcParams.update({
         "font.family": "serif",
-        "mathtext.fontset": "cm"
+        "mathtext.fontset": "cm",
+        "axes.labelsize": 14,
+        "axes.titlesize": 15,
+        "xtick.labelsize": 12,
+        "ytick.labelsize": 12,
+        "axes.linewidth": 1.2
     })
-    fig, ax = plt.subplots(2, 3, figsize=(16, 7), dpi=150)
+    fig, ax = plt.subplots(2, 3, figsize=(16, 7.5), dpi=150)
     
     mode_titles = ["Moisture Mode", "Convectively Coupled Wave", "Fast Gravity Wave"]
     
-    x_ticks = ds_sel['k'].values
-    y_ticks = ds_sel[param_name].values
-    
-    instab_data = ds_sel['instab'].transpose(param_name, 'k', 'mode').values
-    pspeed_data = ds_sel['pspeed'].transpose(param_name, 'k', 'mode').values
-    
     for i in range(3):
+        # Extract robust dimension-aligned DataFrames for the specific mode
+        # Transpose guarantees k is row (x-axis after .T) and param_name is col (y-axis after .T)
+        da_instab = ds_sel['instab'].isel(mode=i).transpose('k', param_name)
+        da_pspeed = ds_sel['pspeed'].isel(mode=i).transpose('k', param_name)
+        
+        df_instab = da_instab.to_pandas().T
+        df_pspeed = da_pspeed.to_pandas().T
+        
         # --- Top Row: Instability ---
         sns.heatmap(
-            instab_data[..., i],
+            df_instab,
             ax=ax[0, i],
             annot=True,
             fmt=".2f", 
-            cmap="coolwarm",
-            vmin=-2.0, vmax=2.0,
+            cmap="RdBu_r",
+            vmin=-2.0, vmax=2.0, center=0,
             cbar=(i == 2),
             xticklabels=False,
-            yticklabels=np.round(y_ticks, 2) if i == 0 else False
+            yticklabels=True if i == 0 else False,
+            linewidths=0.5,
+            linecolor='lightgray',
+            cbar_kws={'label': r"Growth Rate ($\mathrm{day^{-1}}$)"} if i == 2 else None
         )
         ax[0, i].invert_yaxis()
-        ax[0, i].set_title(mode_titles[i] if i < len(mode_titles) else f"Mode {i}", fontsize=14, fontweight="bold")
+        ax[0, i].set_title(mode_titles[i] if i < len(mode_titles) else f"Mode {i}", fontsize=15, fontweight="bold")
+        
+        for _, spine in ax[0, i].spines.items():
+            spine.set_visible(True)
+            spine.set_linewidth(1.2)
+            
+        ax[0, i].tick_params(direction="in", top=True, right=True, left=True, bottom=True)
+        ax[0, i].set_xlabel("")
         
         if i == 0:
             ax[0, i].set_ylabel(param_name, fontsize=14, fontweight="bold")
-            
+            ax[0, i].set_yticklabels([f"{float(t.get_text()):.2f}" for t in ax[0, i].get_yticklabels()])
+        else:
+            ax[0, i].set_ylabel("")
+
         if i == 2:
             cbar = ax[0, i].collections[0].colorbar
-            cbar.set_label(r"Growth Rate ($\mathrm{day^{-1}}$)", fontsize=12)
+            cbar.ax.tick_params(direction="in")
+            cbar.set_label(r"Growth Rate ($\mathrm{day^{-1}}$)", fontsize=13)
 
         # --- Bottom Row: Phase Speed ---
         sns.heatmap(
-            pspeed_data[..., i],
+            df_pspeed,
             ax=ax[1, i],
             annot=True,
             fmt=".2f", 
-            cmap="coolwarm",
+            cmap="RdBu_r",
             vmin=-15.0, vmax=45.0, center=0.0,
             cbar=(i == 2),
-            xticklabels=np.round(x_ticks, 1),
-            yticklabels=np.round(y_ticks, 2) if i == 0 else False
+            xticklabels=True,
+            yticklabels=True if i == 0 else False,
+            linewidths=0.5,
+            linecolor='lightgray',
+            cbar_kws={'label': r"Phase Speed ($\mathrm{m~s^{-1}}$)"} if i == 2 else None
         )
         ax[1, i].invert_yaxis()
+        
+        for _, spine in ax[1, i].spines.items():
+            spine.set_visible(True)
+            spine.set_linewidth(1.2)
+            
+        ax[1, i].tick_params(direction="in", top=True, right=True, left=True, bottom=True)
         ax[1, i].set_xlabel(r"Non-dimensional Wavenumber $k$", fontsize=14)
+        ax[1, i].set_xticklabels([f"{float(t.get_text()):.1f}" for t in ax[1, i].get_xticklabels()])
         
         if i == 0:
             ax[1, i].set_ylabel(param_name, fontsize=14, fontweight="bold")
-            
+            ax[1, i].set_yticklabels([f"{float(t.get_text()):.2f}" for t in ax[1, i].get_yticklabels()])
+        else:
+            ax[1, i].set_ylabel("")
+
         if i == 2:
             cbar = ax[1, i].collections[0].colorbar
-            cbar.set_label(r"Phase Speed ($\mathrm{m~s^{-1}}$)", fontsize=12)
+            cbar.ax.tick_params(direction="in")
+            cbar.set_label(r"Phase Speed ($\mathrm{m~s^{-1}}$)", fontsize=13)
 
-    fig.suptitle(title, x=0.5, y=1.02, fontsize=16, fontweight="bold")
+    fig.suptitle(title, x=0.5, y=1.02, fontsize=17, fontweight="bold")
     plt.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
@@ -155,7 +191,7 @@ def main():
     if sel_dict:
         ds_sel = ds_sel.sel(**sel_dict)
         
-    ds_sel = ds_sel.squeeze()
+    ds_sel = ds_sel.squeeze().compute()
     
     title = f"Dispersion Relation Sensitivity: {target_param}"
     if sel_dict:
@@ -164,7 +200,7 @@ def main():
     output_path = fig_dir / f"sensitivity_heatmap.png"
     print(f"Generating Combined Heatmap for {target_param}...")
     
-    plot_combined_heatmaps(ds_sel.compute(), target_param, title, output_path)
+    plot_combined_heatmaps(ds_sel, target_param, title, output_path)
     print(f"Done! Figure saved to {output_path}")
 
 if __name__ == "__main__":
