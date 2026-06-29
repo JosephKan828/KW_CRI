@@ -12,19 +12,17 @@ def track_roots(
 ) -> np.ndarray:
 
     n_modes, nk = raw_roots.shape
-    sorted_roots: np.ndarray = np.zeros_like(raw_roots)
+    tracked_roots: np.ndarray = np.zeros_like(raw_roots)
 
-    # Sort the initial roots by their real part (phase speed) to ensure 
-    # consistent ordering across different parameter values.
-    initial_idx = np.argsort(np.real(raw_roots[:, 0]))
-    sorted_roots[:, 0] = raw_roots[initial_idx, 0]
+    # Initial assignment (no sorting yet, just pick the raw roots at k=0)
+    tracked_roots[:, 0] = raw_roots[:, 0]
 
     for k in range(1, nk):
         # Use linear extrapolation for better tracking during mode crossings
         if k == 1:
-            predicted = sorted_roots[:, 0]
+            predicted = tracked_roots[:, 0]
         else:
-            predicted = sorted_roots[:, k-1] + (sorted_roots[:, k-1] - sorted_roots[:, k-2])
+            predicted = tracked_roots[:, k-1] + (tracked_roots[:, k-1] - tracked_roots[:, k-2])
             
         curr_roots = raw_roots[:, k]
         
@@ -35,9 +33,15 @@ def track_roots(
         row_ind, col_ind = linear_sum_assignment(cost_matrix)
         
         # Map the current roots to their assigned rows
-        sorted_roots[row_ind, k] = curr_roots[col_ind]
+        tracked_roots[row_ind, k] = curr_roots[col_ind]
         
-    return sorted_roots
+    # Sort the continuously tracked modes based on their real part (frequency/phase speed)
+    # at the HIGHEST wavenumber (k=-1). 
+    # At large k, modes are well-separated: Moisture Mode (~0), CCW (intermediate), FGW (fast).
+    # Sorting at k=0 is unstable due to near-zero frequencies.
+    final_idx = np.argsort(np.real(tracked_roots[:, -1]))
+    
+    return tracked_roots[final_idx, :]
 
 def compute_coefficients(
     params: WaveParameters, k_values: np.ndarray
