@@ -161,7 +161,7 @@ def main():
     if sel_dict:
         title += f" ({', '.join(f'{k}={v}' for k,v in sel_dict.items())})"
     
-    output_path = fig_dir / f"sensitivity_heatmap_{target_param}.png"
+    output_path = fig_dir / f"sensitivity_heatmap.png"
     print(f"Generating Combined Heatmap for {target_param}...")
     
     plot_combined_heatmaps(ds_sel.compute(), target_param, title, output_path)

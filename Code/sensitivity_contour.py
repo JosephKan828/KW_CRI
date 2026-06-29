@@ -164,7 +164,7 @@ def main():
     if sel_dict:
         title += f" ({', '.join(f'{k}={v}' for k,v in sel_dict.items())})"
     
-    output_path = fig_dir / f"sensitivity_contour_{target_param}.png"
+    output_path = fig_dir / f"sensitivity_contour.png"
     print(f"Generating Combined Contour Plot for {target_param}...")
     
     # Evaluate lazily loaded data and plot
