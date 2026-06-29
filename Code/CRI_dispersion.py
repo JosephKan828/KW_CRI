@@ -200,9 +200,12 @@ def main():
     # Drop complex 'omega' variable since NetCDF4 engine doesn't support complex data natively
     ds = ds.drop_vars('omega')
     
-    # Evaluate the lazy dask array using multiprocessing scheduler
+    # Evaluate the lazy dask array into memory using multiprocessing scheduler
     with dask.config.set(scheduler='processes', num_workers=multiprocessing.cpu_count()):
-        ds.to_netcdf(nc_path)
+        ds.load()
+        
+    # Save the computed data to NetCDF synchronously
+    ds.to_netcdf(nc_path)
         
     print(f"Data saved to {nc_path}")
     
