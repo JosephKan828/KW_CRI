@@ -33,7 +33,7 @@ def plot_combined_contours(ds_sel, param_name, title, output_path):
     })
     
     fig, ax = plt.subplots(2, 3, figsize=(18, 7.5), dpi=150)
-    mode_titles = ["Moisture Mode", "Convectively Coupled Wave", "Fast Gravity Wave"]
+    mode_titles = ["Slow Mode", "Intermediate Mode", "Fast Mode"]
     
     for i in range(3):
         # Extract robust dimension-aligned DataArrays for the specific mode
