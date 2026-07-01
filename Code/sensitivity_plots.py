@@ -288,7 +288,8 @@ def main():
     if sel_dict:
         ds_sel_contour = ds_sel_contour.sel(**sel_dict)
         
-    ds_sel_contour = ds_sel_contour.squeeze().compute()
+    dims_to_squeeze = [d for d in ds_sel_contour.dims if d not in ['k', 'mode', target_param]]
+    ds_sel_contour = ds_sel_contour.squeeze(dim=dims_to_squeeze).compute()
     
     title = f"Dispersion Relation Sensitivity: {target_param}"
     if sel_dict:
@@ -300,6 +301,7 @@ def main():
     print(f"Saved: {output_path_contour}")
     
     # --- HEATMAP PREPARATION ---
+
     previous_values = {
         "F": [3.0, 4.0, 5.0],
         "f": [0.0, 0.25, 0.5, 0.75, 1.0],
@@ -324,7 +326,8 @@ def main():
     if sel_dict:
         ds_sel_heatmap = ds_sel_heatmap.sel(**sel_dict)
         
-    ds_sel_heatmap = ds_sel_heatmap.squeeze().compute()
+    dims_to_squeeze = [d for d in ds_sel_heatmap.dims if d not in ['k', 'mode', target_param]]
+    ds_sel_heatmap = ds_sel_heatmap.squeeze(dim=dims_to_squeeze).compute()
     
     output_path_heatmap = fig_dir / f"sensitivity_heatmap.png"
     print(f"Generating Combined Heatmap for {target_param}...")
