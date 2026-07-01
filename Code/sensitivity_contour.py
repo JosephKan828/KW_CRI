@@ -133,7 +133,7 @@ def main():
     parser.add_argument("--m1", type=float, nargs="+", help="Moisture coupling parameter for mode 1")
     parser.add_argument("--m2", type=float, nargs="+", help="Moisture coupling parameter for mode 2")
     parser.add_argument("--gamma_q", type=float, nargs="+", help="Moisture relaxation rate")
-    parser.add_argument("--mode", type=str, choices=["full", "simplified"], default="full", help="Experiment mode")
+    parser.add_argument("--scheme", type=str, default="full", help="Experiment scheme")
     
     args = parser.parse_args()
     
@@ -146,8 +146,8 @@ def main():
     keys = list(provided_params.keys())
     param_names = "_".join(keys) if keys else "default"
     
-    data_dir = Path(f"/home/b11209013/KW_CRI/File/{param_names}_sensitivity_{args.mode}")
-    fig_dir = Path(f"/home/b11209013/KW_CRI/Figure/{param_names}_sensitivity_{args.mode}")
+    data_dir = Path(f"/home/b11209013/KW_CRI/File/{param_names}_sensitivity_{args.scheme}")
+    fig_dir = Path(f"/home/b11209013/KW_CRI/Figure/{param_names}_sensitivity_{args.scheme}")
     nc_path = data_dir / "dispersion_data.nc"
     
     if not nc_path.exists():

@@ -1,21 +1,17 @@
-#!/bin/bash
-
 root="/home/b11209013/KW_CRI"
 
 # ====================================================================
 # SENSITIVITY SWEEP TARGETING VARIABLES
-# ====================================================================
-# e.g., ./CRI_dispersion.sh "Testing moisture sensitivity" "full" "all"
 EXPERIMENT_DESC=${1:-"Routine sensitivity sweep"}
-MODE=${2:-"full"}
+SCHEME=${2:-"full"}
 TARGET=${3:-"all"}
+EXTRA_ARGS=${4:-""}
 
 # Parameter setup
 VARIABLES=("f" "m1" "scaling_factor" "b1" "m2" "gamma_q")
 
 get_sequence() {
     case $1 in
-        # F) echo $(seq -f "%.3f" -s " " 3.0 0.02 5.0) ;;
         f) echo $(seq -f "%.3f" -s " " 0.0 0.05 1.0) ;;
         m1) echo $(seq -f "%.3f" -s " " 0.0 0.1 2.0) ;;
         # c1) echo $(seq -f "%.3f" -s " " 0.8 0.02 1.2) ;;
@@ -54,7 +50,7 @@ run_sweep() {
     echo "| Property | Value |" >> "$LOG_FILE"
     echo "| :--- | :--- |" >> "$LOG_FILE"
     echo "| **Description** | $EXPERIMENT_DESC (Target: $VAR_NAME) |" >> "$LOG_FILE"
-    echo "| **Mode** | \`$MODE\` |" >> "$LOG_FILE"
+    echo "| **Scheme** | \`$SCHEME\` |" >> "$LOG_FILE"
     echo "| **Commit** | \`$GIT_HASH\` |" >> "$LOG_FILE"
     echo "" >> "$LOG_FILE"
     echo "<details>" >> "$LOG_FILE"
@@ -67,20 +63,21 @@ run_sweep() {
     echo "" >> "$LOG_FILE"
     echo "---" >> "$LOG_FILE"
 
-    echo "Starting dispersion sensitivity sweep ($EXPERIMENT_DESC) with mode $MODE..."
+    echo "Starting dispersion sensitivity sweep ($EXPERIMENT_DESC) with scheme $SCHEME..."
 
     python3 "$root/Code/CRI_dispersion.py" \
-        --mode "$MODE" \
+        --scheme "$SCHEME" \
+        $EXTRA_ARGS \
         --$VAR_NAME $VAR_LIST
 
     echo "Generating contours..."
     python3 "$root/Code/sensitivity_contour.py" \
-        --mode "$MODE" \
+        --scheme "$SCHEME" \
         --$VAR_NAME $VAR_LIST
 
     echo "Generating heatmaps (5-grid subset)..."
     python3 "$root/Code/sensitivity_heatmap.py" \
-        --mode "$MODE" \
+        --scheme "$SCHEME" \
         --$VAR_NAME $VAR_LIST
 }
 

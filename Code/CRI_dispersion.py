@@ -11,6 +11,7 @@ import multiprocessing
 import numpy as np
 import xarray as xr
 import dask
+import json
 from pathlib import Path
 from matplotlib import pyplot as plt
 
@@ -18,7 +19,7 @@ sys.path.append("/home/b11209013/KW_CRI/src")
 from parameter import WaveParameters
 from calc_dispersion import compute_dispersion
 
-def calc_dispersion_grid(k_cal, k_dis, mode_flag, param_grids):
+def calc_dispersion_grid(k_cal, k_dis, param_overrides, coeff_mask, param_grids):
     """
     Construct an N-dimensional parameter grid and compute dispersion lazily using Dask.
     """
@@ -36,12 +37,10 @@ def calc_dispersion_grid(k_cal, k_dis, mode_flag, param_grids):
             p_dict = {k: float(v) for k, v in zip(p_keys, p_vals)}
             params = WaveParameters(**p_dict)
             
-            if mode_flag == "simplified":
-                params.alpha_11_o = 0.0
-                params.alpha_12_o = 0.0
-                params.alpha_22_o = 0.0
+            for k_override, v_override in param_overrides.items():
+                setattr(params, k_override, v_override)
                 
-            disp_rel = compute_dispersion(params, k_arr, [True, True, True, True])
+            disp_rel = compute_dispersion(params, k_arr, coeff_mask)
             return disp_rel
         except Exception as e:
             # Return NaNs if the parameter combination leads to unstable/invalid roots
@@ -78,7 +77,7 @@ def plot_single_configuration(ds_slice, title, output_path):
     fig, ax = plt.subplots(1, 2, figsize=(18, 4), dpi=150)
     
     ls_list = ["-", "--", ":"]
-    mode_labels = ["Moisture Mode", "Convectively Coupled Wave", "Fast Gravity Wave"]
+    mode_labels = ["Slow Mode", "Intermediate Mode", "Fast Mode"]
     
     # Plot Growth Rate
     for m in range(ds_slice.sizes['mode']):
@@ -130,9 +129,27 @@ def main():
     parser.add_argument("--m1", type=float, nargs="+", help="Moisture coupling parameter for mode 1")
     parser.add_argument("--m2", type=float, nargs="+", help="Moisture coupling parameter for mode 2")
     parser.add_argument("--gamma_q", type=float, nargs="+", help="Moisture relaxation rate")
-    parser.add_argument("--mode", type=str, choices=["full", "simplified"], default="full", help="Experiment mode")
+    parser.add_argument("--scheme", type=str, default="full", help="Name of scheme in schemes.json")
+    parser.add_argument("--scheme_file", type=str, default="/home/b11209013/KW_CRI/Code/schemes.json", help="Path to scheme config")
+    parser.add_argument("--override_params", type=str, nargs="+", default=[], help="Key=Value pairs to override params inline")
+    parser.add_argument("--coeff_mask", type=int, nargs=4, help="4 binary values to mask [G3, G2, G1, G0]")
     
     args = parser.parse_args()
+    
+    with open(args.scheme_file, 'r') as f:
+        schemes = json.load(f)
+    base_config = schemes.get(args.scheme, schemes.get("full", {}))
+
+    param_overrides = base_config.get("param_overrides", {}).copy()
+    for override in args.override_params:
+        if "=" in override:
+            key, val = override.split("=")
+            param_overrides[key] = float(val)
+
+    if args.coeff_mask is not None:
+        coeff_mask = [bool(m) for m in args.coeff_mask]
+    else:
+        coeff_mask = base_config.get("coeff_mask", [True, True, True, True])
     
     # 1. Parse Parameters
     param_grids = {}
@@ -154,7 +171,7 @@ def main():
     k_cal = 2 * np.pi * 4320 / 40000 * k_dis
     
     # 3. Construct Dask-backed Xarray Dataset
-    omega = calc_dispersion_grid(k_cal, k_dis, args.mode, param_grids)
+    omega = calc_dispersion_grid(k_cal, k_dis, param_overrides, coeff_mask, param_grids)
     
     ds = xr.Dataset({'omega': omega})
     
@@ -184,8 +201,8 @@ def main():
     param_names = "_".join(provided_keys) if provided_keys else "default"
     
     base_dir = Path("/home/b11209013/KW_CRI")
-    fig_dir = base_dir / f"Figure/{param_names}_sensitivity_{args.mode}"
-    data_dir = base_dir / f"File/{param_names}_sensitivity_{args.mode}"
+    fig_dir = base_dir / f"Figure/{param_names}_sensitivity_{args.scheme}"
+    data_dir = base_dir / f"File/{param_names}_sensitivity_{args.scheme}"
     
     fig_dir.mkdir(parents=True, exist_ok=True)
     data_dir.mkdir(parents=True, exist_ok=True)

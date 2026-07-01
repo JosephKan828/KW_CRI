@@ -1,0 +1,20 @@
+{
+  "full": {
+    "param_overrides": {},
+    "coeff_mask": [true, true, true, true]
+  },
+  "simplified_alpha": {
+    "description": "Zeros out coupling terms for testing uncoupled modes",
+    "param_overrides": {
+      "alpha_11_o": 0.0,
+      "alpha_12_o": 0.0,
+      "alpha_22_o": 0.0
+    },
+    "coeff_mask": [true, true, true, true]
+  },
+  "no_linear_term": {
+    "description": "Tests dispersion without the G1 * omega linear term",
+    "param_overrides": {},
+    "coeff_mask": [true, true, false, true]
+  }
+}
