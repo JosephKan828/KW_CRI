@@ -256,8 +256,8 @@ def main():
     keys = list(provided_params.keys())
     param_names = "_".join(keys) if keys else "default"
     
-    data_dir = Path(f"/home/b11209013/KW_CRI/File/{param_names}_sensitivity_{args.scheme}")
-    fig_dir = Path(f"/home/b11209013/KW_CRI/Figure/{param_names}_sensitivity_{args.scheme}")
+    data_dir = Path(f"/home/b11209013/KW_CRI/File/{args.scheme}/{param_names}")
+    fig_dir = Path(f"/home/b11209013/KW_CRI/Figure/{args.scheme}/{param_names}")
     nc_path = data_dir / "dispersion_data.nc"
     
     if not nc_path.exists():
