@@ -23,6 +23,15 @@ def calc_dispersion_grid(k_cal, k_dis, param_overrides, coeff_mask, param_grids)
     """
     Construct an N-dimensional parameter grid and compute dispersion lazily using Dask.
     """
+    if coeff_mask[0]:
+        mode_size = 3
+    elif coeff_mask[1]:
+        mode_size = 2
+    elif coeff_mask[2]:
+        mode_size = 1
+    else:
+        mode_size = 0
+        
     # Chunk parameters to size 1 to parallelize over parameter combinations
     das = {k: xr.DataArray(v, dims=[k], coords={k: v}).chunk({k: 1}) for k, v in param_grids.items()}
     
@@ -44,7 +53,7 @@ def calc_dispersion_grid(k_cal, k_dis, param_overrides, coeff_mask, param_grids)
             return disp_rel
         except Exception as e:
             # Return NaNs if the parameter combination leads to unstable/invalid roots
-            return np.full((len(k_arr), 3), np.nan + 1j*np.nan, dtype=np.complex128)
+            return np.full((len(k_arr), mode_size), np.nan + 1j*np.nan, dtype=np.complex128)
 
     out = xr.apply_ufunc(
         _core_dispersion_wrapper_closure,
@@ -54,7 +63,7 @@ def calc_dispersion_grid(k_cal, k_dis, param_overrides, coeff_mask, param_grids)
         vectorize=True,
         dask='parallelized',
         output_dtypes=[np.complex128],
-        dask_gufunc_kwargs={'output_sizes': {'mode': 3}}
+        dask_gufunc_kwargs={'output_sizes': {'mode': mode_size}}
     )
     
     return out
@@ -183,7 +192,15 @@ def main():
     ds['k_cal'].attrs = {'long_name': 'Dimensional Wavenumber', 'units': 'rad m^{-1}'}
     
     # Define Mode coordinate
-    ds.coords['mode'] = np.arange(3)
+    if coeff_mask[0]:
+        mode_size = 3
+    elif coeff_mask[1]:
+        mode_size = 2
+    elif coeff_mask[2]:
+        mode_size = 1
+    else:
+        mode_size = 0
+    ds.coords['mode'] = np.arange(mode_size)
     
     # 4. Perform Advanced Diagnostics
     # Removed post-hoc `np.argsort` by phase speed here! 

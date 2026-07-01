@@ -34,10 +34,11 @@ def plot_combined_contours(ds_sel, param_name, title, output_path):
         "axes.linewidth": 1.2
     })
     
-    fig, ax = plt.subplots(2, 3, figsize=(18, 7.5), dpi=150)
+    num_modes = ds_sel.sizes['mode']
+    fig, ax = plt.subplots(2, num_modes, figsize=(6 * num_modes, 7.5), dpi=150, squeeze=False)
     mode_titles = ["Slow Mode", "Intermediate Mode", "Fast Mode"]
     
-    for i in range(3):
+    for i in range(num_modes):
         # Extract robust dimension-aligned DataArrays for the specific mode
         da_instab = ds_sel['instab'].isel(mode=i)
         da_pspeed = ds_sel['pspeed'].isel(mode=i)
@@ -74,7 +75,7 @@ def plot_combined_contours(ds_sel, param_name, title, output_path):
             ax[0, i].set_ylabel("")
             ax[0, i].set_yticklabels([])
             
-        if i == 2:
+        if i == num_modes - 1:
             cbar = fig.colorbar(cf_instab, ax=ax[0, i], orientation="vertical", shrink=0.85, aspect=30, pad=0.04)
             cbar.set_ticks([-2, -1, 0, 1, 2])
             cbar.set_label(r"Growth Rate ($\mathrm{day^{-1}}$)", fontsize=13)
@@ -112,7 +113,7 @@ def plot_combined_contours(ds_sel, param_name, title, output_path):
             ax[1, i].set_ylabel("")
             ax[1, i].set_yticklabels([])
 
-        if i == 2:
+        if i == num_modes - 1:
             cbar = fig.colorbar(cf_pspeed, ax=ax[1, i], orientation="vertical", shrink=0.85, aspect=30, pad=0.04)
             cbar.set_ticks([-10, 0, 10, 20, 30, 40, 50])
             cbar.set_label(r"Phase Speed ($\mathrm{m~s^{-1}}$)", fontsize=13)
@@ -139,11 +140,12 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
         "ytick.labelsize": 12,
         "axes.linewidth": 1.2
     })
-    fig, ax = plt.subplots(2, 3, figsize=(16, 7.5), dpi=150)
+    num_modes = ds_sel.sizes['mode']
+    fig, ax = plt.subplots(2, num_modes, figsize=(6 * num_modes, 7.5), dpi=150, squeeze=False)
     
     mode_titles = ["Slow Mode", "Intermediate Mode", "Fast Mode"]
     
-    for i in range(3):
+    for i in range(num_modes):
         # Extract robust dimension-aligned DataFrames for the specific mode
         # Transpose guarantees k is row (x-axis after .T) and param_name is col (y-axis after .T)
         da_instab = ds_sel['instab'].isel(mode=i).transpose('k', param_name)
@@ -160,12 +162,12 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
             fmt=".2f", 
             cmap="RdBu_r",
             vmin=-2.0, vmax=2.0, center=0,
-            cbar=(i == 2),
+            cbar=(i == num_modes - 1),
             xticklabels=False,
             yticklabels=True if i == 0 else False,
             linewidths=0.5,
             linecolor='lightgray',
-            cbar_kws={'label': r"Growth Rate ($\mathrm{day^{-1}}$)"} if i == 2 else None
+            cbar_kws={'label': r"Growth Rate ($\mathrm{day^{-1}}$)"} if i == num_modes - 1 else None
         )
         ax[0, i].invert_yaxis()
         ax[0, i].set_title(mode_titles[i] if i < len(mode_titles) else f"Mode {i}", fontsize=15, fontweight="bold")
@@ -183,7 +185,7 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
         else:
             ax[0, i].set_ylabel("")
 
-        if i == 2:
+        if i == num_modes - 1:
             cbar = ax[0, i].collections[0].colorbar
             cbar.ax.tick_params(direction="in")
             cbar.set_label(r"Growth Rate ($\mathrm{day^{-1}}$)", fontsize=13)
@@ -196,12 +198,12 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
             fmt=".2f", 
             cmap="BrBG",
             vmin=-15.0, vmax=45.0, center=0.0,
-            cbar=(i == 2),
+            cbar=(i == num_modes - 1),
             xticklabels=True,
             yticklabels=True if i == 0 else False,
             linewidths=0.5,
             linecolor='lightgray',
-            cbar_kws={'label': r"Phase Speed ($\mathrm{m~s^{-1}}$)"} if i == 2 else None
+            cbar_kws={'label': r"Phase Speed ($\mathrm{m~s^{-1}}$)"} if i == num_modes - 1 else None
         )
         ax[1, i].invert_yaxis()
         
@@ -219,7 +221,7 @@ def plot_combined_heatmaps(ds_sel, param_name, title, output_path):
         else:
             ax[1, i].set_ylabel("")
 
-        if i == 2:
+        if i == num_modes - 1:
             cbar = ax[1, i].collections[0].colorbar
             cbar.ax.tick_params(direction="in")
             cbar.set_label(r"Phase Speed ($\mathrm{m~s^{-1}}$)", fontsize=13)
