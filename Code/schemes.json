@@ -12,9 +12,9 @@
     },
     "coeff_mask": [true, true, true, true]
   },
-  "no_linear_term": {
-    "description": "Tests dispersion without the G1 * omega linear term",
+  "no_nonlinear_term": {
+    "description": "Tests dispersion without nonlinear term",
     "param_overrides": {},
-    "coeff_mask": [true, true, false, true]
+    "coeff_mask": [false, false, true, true]
   }
 }

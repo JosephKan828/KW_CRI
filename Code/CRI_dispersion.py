@@ -201,8 +201,8 @@ def main():
     param_names = "_".join(provided_keys) if provided_keys else "default"
     
     base_dir = Path("/home/b11209013/KW_CRI")
-    fig_dir = base_dir / f"Figure/{param_names}_sensitivity_{args.scheme}"
-    data_dir = base_dir / f"File/{param_names}_sensitivity_{args.scheme}"
+    fig_dir = base_dir / f"Figure/{args.scheme}/{param_names}"
+    data_dir = base_dir / f"File/{args.scheme}/{param_names}"
     
     fig_dir.mkdir(parents=True, exist_ok=True)
     data_dir.mkdir(parents=True, exist_ok=True)
@@ -218,7 +218,7 @@ def main():
     ds = ds.drop_vars('omega')
     
     # Evaluate the lazy dask array into memory using multiprocessing scheduler
-    with dask.config.set(scheduler='processes', num_workers=multiprocessing.cpu_count()):
+    with dask.config.set(scheduler='processes', num_workers=8):
         ds.load()
         
     # Save the computed data to NetCDF synchronously

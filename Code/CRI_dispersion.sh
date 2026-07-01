@@ -70,13 +70,8 @@ run_sweep() {
         $EXTRA_ARGS \
         --$VAR_NAME $VAR_LIST
 
-    echo "Generating contours..."
-    python3 "$root/Code/sensitivity_contour.py" \
-        --scheme "$SCHEME" \
-        --$VAR_NAME $VAR_LIST
-
-    echo "Generating heatmaps (5-grid subset)..."
-    python3 "$root/Code/sensitivity_heatmap.py" \
+    echo "Generating visualization plots (contour and heatmap)..."
+    python3 "$root/Code/sensitivity_plots.py" \
         --scheme "$SCHEME" \
         --$VAR_NAME $VAR_LIST
 }
